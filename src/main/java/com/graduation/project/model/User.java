@@ -1,4 +1,4 @@
-package com.graduation.project;
+package com.graduation.project.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
