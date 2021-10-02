@@ -22,6 +22,7 @@ public class ProjectApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
+
 		userRepository.save(new User(1, "user", "aa@aa.aa", "password"));
 		System.out.println(userRepository.findAll());
 	}
