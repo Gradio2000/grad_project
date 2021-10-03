@@ -1,9 +1,6 @@
 package com.graduation.project.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "user_role")
@@ -11,6 +8,7 @@ public class UserRole {
 
     @Id
     @Column(name = "user_role_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column

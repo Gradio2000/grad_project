@@ -15,12 +15,10 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final UserDto userDto;
-    private final RoleService roleService;
 
-    public UserService(UserRepository userRepository, UserDto userDto, RoleService roleService) {
+    public UserService(UserRepository userRepository, UserDto userDto) {
         this.userRepository = userRepository;
         this.userDto = userDto;
-        this.roleService = roleService;
     }
 
     public ResponseEntity<UserDto> getUserByid(int id){
@@ -32,11 +30,8 @@ public class UserService {
     }
 
     public ResponseEntity<User> save(User user) {
-        Role userRole = roleService.getUserRole();
-        List<Role> roles = new ArrayList<>();
-        roles.add(userRole);
-        user.setRoles(roles);
         userRepository.save(user);
+
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }
