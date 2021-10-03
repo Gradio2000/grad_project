@@ -1,9 +1,14 @@
 package com.graduation.project.model;
 
-import javax.persistence.Column;
+
+import org.hibernate.annotations.*;
+import org.springframework.data.jpa.repository.Query;
+
+import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -20,6 +25,15 @@ public class User {
 
     @Column
     private String password;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+    )
+
+    private List<Role> roles;
 
     public User() {
     }
@@ -62,4 +76,13 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
 }
