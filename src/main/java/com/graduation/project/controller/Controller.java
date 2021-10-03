@@ -5,12 +5,13 @@ import com.graduation.project.dto.UserDto;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/users")
 public class Controller {
 
    private final UserService userService;
@@ -24,8 +25,7 @@ public class Controller {
         return userService.getUserByid(id);
     }
 
-    @PostMapping(value = "/add", consumes = "application/json")
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> register(@RequestBody User user) {
         return userService.save(user);
     }
