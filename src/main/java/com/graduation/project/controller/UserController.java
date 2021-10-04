@@ -1,17 +1,17 @@
 package com.graduation.project.controller;
 
+import com.graduation.project.model.Role;
 import com.graduation.project.model.User;
 import com.graduation.project.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.EnumSet;
 
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping( value = "/api/users")
 public class UserController {
 
    private final UserService userService;
@@ -20,8 +20,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> register(@RequestBody User user) {
+        System.out.println("aaaaa");
+        user.setRoles(EnumSet.of(Role.USER_ROLE));
         return userService.save(user);
     }
 }
