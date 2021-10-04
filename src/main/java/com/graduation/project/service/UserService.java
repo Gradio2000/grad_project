@@ -27,7 +27,6 @@ public class UserService {
 
     public ResponseEntity<User> save(User user) {
         userRepository.save(user);
-
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }

@@ -10,3 +10,11 @@ values (1, 'aa@aa.aa', 'user', 'password');
 
 insert into USER_ROLE (ROLE, USER_ID)
 values ('ADMIN_ROLE', 1);
+
+
+insert into RESTAURANT (REST_ID, NAME)
+values (1, 'aaaaaa' );
+insert into RESTAURANT (REST_ID, NAME)
+values (2, 'bbbbbbbb' );
+insert into RESTAURANT (REST_ID, NAME)
+values (3, 'cccccccc' );
