@@ -15,7 +15,7 @@ spring:
   datasource:
     # ImMemory
     url: jdbc:h2:mem:voting
-    #    tcp: jdbc:h2:tcp://localhost:9092/mem:voting
+#        tcp: jdbc:h2:tcp://localhost:9092/mem:voting
     # Absolute path
     #    url: jdbc:h2:C:/projects/bootjava/restorant-voting/db/voting
     #    tcp: jdbc:h2:tcp://localhost:9092/C:/projects/bootjava/restorant-voting/db/voting
@@ -59,5 +59,3 @@ server.servlet:
 #    visibility.getter: none
 #    visibility.setter: none
 #    visibility.is-getter: none
-
-spring.jpa.defer-datasource-initialization: true

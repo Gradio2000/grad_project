@@ -1,4 +1,5 @@
-package com.graduation.project;
+package com.graduation.project.config;
+
 
 import org.h2.tools.Server;
 import org.springframework.cache.annotation.EnableCaching;
