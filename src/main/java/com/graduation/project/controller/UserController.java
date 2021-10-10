@@ -11,7 +11,6 @@ import java.util.EnumSet;
 
 
 @RestController
-@RequestMapping( value = "/api/users")
 public class UserController {
 
    private final UserService userService;
@@ -22,7 +21,6 @@ public class UserController {
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> register(@RequestBody User user) {
-        System.out.println("aaaaa");
         user.setRoles(EnumSet.of(Role.USER_ROLE));
         return userService.save(user);
     }

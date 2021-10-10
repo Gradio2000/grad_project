@@ -18,3 +18,7 @@ insert into RESTAURANT (REST_ID, NAME)
 values (2, 'bbbbbbbb' );
 insert into RESTAURANT (REST_ID, NAME)
 values (3, 'cccccccc' );
+
+
+insert into DISH (DISH_ID, DATE, DISH, PRICE, REST_ID)
+values (1, now(), 'Каша', '12.53', 1 );
