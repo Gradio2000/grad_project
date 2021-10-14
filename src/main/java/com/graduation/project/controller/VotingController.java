@@ -27,14 +27,20 @@ public class VotingController {
     public ResponseEntity<Voit> putVoit(@RequestBody Voit voit){
         LocalDateTime dateStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
         LocalDateTime dateFinish = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59));
+        LocalTime localTime = LocalTime.of(11, 0);
         Voit voit1 = voitRepository.findByLocalDate(dateStart, dateFinish, voit.getUserId());
         if (voit1 == null){
             voit.setLocalDateTime(LocalDateTime.now());
             voitRepository.save(voit);
             return new ResponseEntity<Voit>(HttpStatus.CREATED);
         }
+        if (voit1.getLocalDateTime().toLocalTime().isBefore(localTime)){
+            LocalDateTime localDateTime = LocalDateTime.now();
+            int voitId = voit1.getVoit_id();
+            int restId = voit.getRestId();
+            voitRepository.update(voitId, localDateTime, restId);
+            return new ResponseEntity<Voit>(HttpStatus.CREATED);
+        }
         return new ResponseEntity<Voit>(HttpStatus.SEE_OTHER);
-
     }
-
 }
