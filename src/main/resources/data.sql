@@ -22,3 +22,10 @@ values (3, 'cccccccc' );
 
 insert into DISH (DISH_ID, DATE, DISH, PRICE, REST_ID)
 values (1, now(), 'Каша', '12.53', 1 );
+
+insert into VOIT(DATE, REST_ID, USER_ID)
+values ( '2021-10-13 20:02:25.685000', 1, 1 );
+insert into VOIT(DATE, REST_ID, USER_ID)
+values ( '2021-10-14 20:02:25.685000', 1, 1 );
+insert into VOIT(DATE, REST_ID, USER_ID)
+values ( '2021-10-15 20:02:25.685000', 1, 1 );

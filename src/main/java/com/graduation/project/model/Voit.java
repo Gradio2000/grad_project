@@ -3,7 +3,7 @@ package com.graduation.project.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "voit")
@@ -19,9 +19,9 @@ public class Voit {
     @Column(name = "rest_id")
     private int restId;
 
-    @Column(name = "time")
+    @Column(name = "date")
     @JsonIgnore
-    private Date date;
+    private LocalDateTime localDateTime;
 
     public Voit(int userId, int restId) {
         this.userId = userId;
@@ -55,11 +55,11 @@ public class Voit {
         this.restId = restId;
     }
 
-    public Date getDate() {
-        return date;
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 }

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @RestController
 public class VotingController {
@@ -23,9 +25,16 @@ public class VotingController {
 
     @RequestMapping(value = "/api/voits", method = RequestMethod.POST, consumes = MediaType.ALL_VALUE)
     public ResponseEntity<Voit> putVoit(@RequestBody Voit voit){
-        voit.setDate(new Date());
-        voitRepository.save(voit);
-        return new ResponseEntity<Voit>(HttpStatus.CREATED);
+        LocalDateTime dateStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
+        LocalDateTime dateFinish = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59));
+        Voit voit1 = voitRepository.findByLocalDate(dateStart, dateFinish, voit.getUserId());
+        if (voit1 == null){
+            voit.setLocalDateTime(LocalDateTime.now());
+            voitRepository.save(voit);
+            return new ResponseEntity<Voit>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<Voit>(HttpStatus.SEE_OTHER);
+
     }
 
 }
