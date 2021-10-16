@@ -14,7 +14,7 @@ public class User {
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private int id;
+    private int userId;
 
     @Column(name = "name")
     private String name;
@@ -37,18 +37,18 @@ public class User {
     }
 
     public User(int id, String name, String email, String password) {
-        this.id = id;
+        this.userId = id;
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public int getId() {
-        return id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int id) {
+        this.userId = id;
     }
 
     public String getName() {

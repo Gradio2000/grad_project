@@ -3,7 +3,7 @@ package com.graduation.project.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "dish")
@@ -13,10 +13,10 @@ public class Dish {
     @Column(name = "dish_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private int dish_id;
+    private int dishId;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime localDateTime;
 
     @Column(name = "dish")
     private String dish;
@@ -25,23 +25,22 @@ public class Dish {
     private double price;
 
     @Column(name = "rest_id")
-    @JsonIgnore
-    private int rest_id;
+    private int restId;
 
-    public int getDish_id() {
-        return dish_id;
+    public int getDishId() {
+        return dishId;
     }
 
-    public void setDish_id(int dih_id) {
-        this.dish_id = dih_id;
+    public void setDishId(int dih_id) {
+        this.dishId = dih_id;
     }
 
-    public Date getDate() {
-        return date;
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 
     public String getDish() {
@@ -60,11 +59,11 @@ public class Dish {
         this.price = price;
     }
 
-    public int getRest_id() {
-        return rest_id;
+    public int getRestId() {
+        return restId;
     }
 
-    public void setRest_id(int rest_id) {
-        this.rest_id = rest_id;
+    public void setRestId(int rest_id) {
+        this.restId = rest_id;
     }
 }

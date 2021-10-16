@@ -13,14 +13,11 @@ import java.util.List;
 @Tag(name = "VoitRepository")
 public interface VoitRepository extends JpaRepository<Voit, Integer> {
 
-    @Query("select v from Voit v where v.userId = :userId")
-    Voit findByUserId(Integer userId);
-
     @Query("select v from Voit v where v.userId = :userId and v.localDateTime between :start and :finish")
     Voit findByLocalDate(LocalDateTime start, LocalDateTime finish, int userId);
 
     @Modifying
-    @Query("update Voit v set v.localDateTime = :localDateTime, v.restId = :restId where v.voit_id = :voitId")
+    @Query("update Voit v set v.localDateTime = :localDateTime, v.restId = :restId where v.voitId = :voitId")
     @Transactional
     void update(int voitId, LocalDateTime localDateTime, int restId);
 

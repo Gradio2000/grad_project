@@ -14,7 +14,7 @@ public class Restaurant {
     @Column(name = "rest_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private int rest_id;
+    private int restId;
 
     @Column(name = "name")
     private String name;
@@ -26,12 +26,12 @@ public class Restaurant {
     @JoinColumn(name = "rest_id")
     private List<Dish> dishList;
 
-    public int getRest_id() {
-        return rest_id;
+    public int getRestId() {
+        return restId;
     }
 
-    public void setRest_id(int rest_id) {
-        this.rest_id = rest_id;
+    public void setRestId(int rest_id) {
+        this.restId = rest_id;
     }
 
     public String getName() {

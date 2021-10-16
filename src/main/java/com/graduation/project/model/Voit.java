@@ -12,7 +12,7 @@ public class Voit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "voit_id")
     @JsonIgnore
-    private int voit_id;
+    private int voitId;
 
     @Column(name = "user_id")
     private int userId;
@@ -32,12 +32,12 @@ public class Voit {
     public Voit() {
     }
 
-    public int getVoit_id() {
-        return voit_id;
+    public int getVoitId() {
+        return voitId;
     }
 
-    public void setVoit_id(int voit_id) {
-        this.voit_id = voit_id;
+    public void setVoitId(int voit_id) {
+        this.voitId = voit_id;
     }
 
     public int getUserId() {

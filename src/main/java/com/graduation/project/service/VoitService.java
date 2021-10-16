@@ -4,6 +4,8 @@ import com.graduation.project.model.Restaurant;
 import com.graduation.project.model.Voit;
 import com.graduation.project.repository.RestRepository;
 import com.graduation.project.repository.VoitRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,7 +27,7 @@ public class VoitService {
     }
 
     /*  сервис подсчета голосов */
-    public List<Restaurant> getResult() {
+    public ResponseEntity<List<Restaurant>> getResult() {
         //Время старта (сегодня начало дня)
         LocalDate localDate = LocalDate.now();
         LocalTime localTime = LocalTime.of(0, 0);
@@ -48,7 +50,7 @@ public class VoitService {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
 
-        return restRepository.findAllById(set);
+        return new ResponseEntity<>(restRepository.findAllById(set), HttpStatus.OK);
 
     }
 }

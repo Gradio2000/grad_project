@@ -41,7 +41,7 @@ public class VotingController {
         }
         if (voit1.getLocalDateTime().toLocalTime().isBefore(localTime)){
             LocalDateTime localDateTime = LocalDateTime.now();
-            int voitId = voit1.getVoit_id();
+            int voitId = voit1.getVoitId();
             int restId = voit.getRestId();
             voitRepository.update(voitId, localDateTime, restId);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -55,7 +55,7 @@ public class VotingController {
     }
 
     @GetMapping("/result")
-    public List<Restaurant> getResult(){
+    public ResponseEntity<List<Restaurant>> getResult(){
         return voitService.getResult();
     }
 }
