@@ -2,6 +2,7 @@ package com.graduation.project.controller;
 
 import com.graduation.project.model.Voit;
 import com.graduation.project.repository.VoitRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @RestController
+@Tag(name = "VotingController")
 public class VotingController {
 
     private final VoitRepository voitRepository;

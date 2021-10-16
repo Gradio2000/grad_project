@@ -4,6 +4,7 @@ import com.graduation.project.model.Role;
 import com.graduation.project.model.User;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 
 
 @RestController
+@Tag(name = "UserController")
 public class UserController {
 
    private final UserService userService;

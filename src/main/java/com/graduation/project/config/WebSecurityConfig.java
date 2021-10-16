@@ -54,5 +54,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();
+
+        http.logout()
+                // разрешаем делать логаут всем
+                .permitAll()
+                // указываем URL логаута
+                .logoutUrl("/logout")
+                .clearAuthentication(true)
+                // указываем URL при удачном логауте
+                .logoutSuccessUrl("/login?logout")
+                // делаем не валидной текущую сессию
+                .invalidateHttpSession(true)
+                .and();
     }
 }
