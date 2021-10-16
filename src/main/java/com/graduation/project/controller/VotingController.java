@@ -6,14 +6,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @RestController
 @Tag(name = "VotingController")
@@ -25,7 +23,7 @@ public class VotingController {
         this.voitRepository = voitRepository;
     }
 
-    @RequestMapping(value = "/api/voits", method = RequestMethod.POST, consumes = MediaType.ALL_VALUE)
+    @PostMapping(value = "/api/voits", consumes = MediaType.ALL_VALUE)
     public ResponseEntity<Voit> putVoit(@RequestBody Voit voit){
         LocalDateTime dateStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
         LocalDateTime dateFinish = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59));
@@ -34,15 +32,20 @@ public class VotingController {
         if (voit1 == null){
             voit.setLocalDateTime(LocalDateTime.now());
             voitRepository.save(voit);
-            return new ResponseEntity<Voit>(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         if (voit1.getLocalDateTime().toLocalTime().isBefore(localTime)){
             LocalDateTime localDateTime = LocalDateTime.now();
             int voitId = voit1.getVoit_id();
             int restId = voit.getRestId();
             voitRepository.update(voitId, localDateTime, restId);
-            return new ResponseEntity<Voit>(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
-        return new ResponseEntity<Voit>(HttpStatus.SEE_OTHER);
+        return new ResponseEntity<>(HttpStatus.SEE_OTHER);
+    }
+
+    @GetMapping(value = "/api/voits", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Voit> getVoitLst(){
+       return voitRepository.findAll();
     }
 }

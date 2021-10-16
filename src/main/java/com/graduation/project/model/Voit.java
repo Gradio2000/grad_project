@@ -11,6 +11,7 @@ public class Voit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "voit_id")
+    @JsonIgnore
     private int voit_id;
 
     @Column(name = "user_id")
