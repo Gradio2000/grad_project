@@ -1,7 +1,9 @@
 package com.graduation.project.controller;
 
+import com.graduation.project.model.Restaurant;
 import com.graduation.project.model.Voit;
 import com.graduation.project.repository.VoitRepository;
+import com.graduation.project.service.VoitService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,15 +17,18 @@ import java.util.List;
 
 @RestController
 @Tag(name = "VotingController")
+@RequestMapping("/api")
 public class VotingController {
 
     private final VoitRepository voitRepository;
+    private final VoitService voitService;
 
-    public VotingController(VoitRepository voitRepository) {
+    public VotingController(VoitRepository voitRepository, VoitService voitService) {
         this.voitRepository = voitRepository;
+        this.voitService = voitService;
     }
 
-    @PostMapping(value = "/api/voits", consumes = MediaType.ALL_VALUE)
+    @PostMapping(value = "voits", consumes = MediaType.ALL_VALUE)
     public ResponseEntity<Voit> putVoit(@RequestBody Voit voit){
         LocalDateTime dateStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
         LocalDateTime dateFinish = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59));
@@ -44,8 +49,13 @@ public class VotingController {
         return new ResponseEntity<>(HttpStatus.SEE_OTHER);
     }
 
-    @GetMapping(value = "/api/voits", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/voits", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Voit> getVoitLst(){
        return voitRepository.findAll();
+    }
+
+    @GetMapping("/result")
+    public List<Restaurant> getResult(){
+        return voitService.getResult();
     }
 }

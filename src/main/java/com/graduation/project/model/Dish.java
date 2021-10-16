@@ -1,5 +1,7 @@
 package com.graduation.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -10,7 +12,8 @@ public class Dish {
     @Id
     @Column(name = "dish_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int dih_id;
+    @JsonIgnore
+    private int dish_id;
 
     @Column(name = "date")
     private Date date;
@@ -21,17 +24,16 @@ public class Dish {
     @Column(name = "price")
     private double price;
 
-//    @ManyToOne(targetEntity = Restaurant.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "rest_id", insertable = false, updatable = false)
     @Column(name = "rest_id")
+    @JsonIgnore
     private int rest_id;
 
-    public int getDih_id() {
-        return dih_id;
+    public int getDish_id() {
+        return dish_id;
     }
 
-    public void setDih_id(int dih_id) {
-        this.dih_id = dih_id;
+    public void setDish_id(int dih_id) {
+        this.dish_id = dih_id;
     }
 
     public Date getDate() {

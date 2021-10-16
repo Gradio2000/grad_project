@@ -1,5 +1,6 @@
 package com.graduation.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -12,6 +13,7 @@ public class Restaurant {
     @Id
     @Column(name = "rest_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private int rest_id;
 
     @Column(name = "name")
