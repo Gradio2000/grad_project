@@ -9,7 +9,10 @@ values (1, 'aa@aa.aa', 'user', 'password');
 -- create table USER_ROLE(ROLE_ID integer, ROLE varchar, USER_ID integer);
 
 insert into USER_ROLE (ROLE, USER_ID)
-values ('ADMIN_ROLE', 1);
+values ('ADMIN_ROLE', 2);
+
+insert into USER_ROLE (ROLE, USER_ID)
+values ('USER_ROLE', 1);
 
 
 insert into RESTAURANT (REST_ID, NAME)

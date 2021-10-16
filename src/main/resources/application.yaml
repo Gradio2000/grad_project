@@ -44,8 +44,12 @@ spring:
 logging:
   level:
     root: WARN
-    ru.javaops.bootjava: DEBUG
-#    org.springframework.security.web.FilterChainProxy: DEBUG
+    com.graduation.project: DEBUG
+
+    org:
+      springframework:
+        security=INFO:
+#            org.springframework.security.web.FilterChainProxy: DEBUG
 
 server.servlet:
   encoding:
@@ -61,3 +65,4 @@ server.servlet:
 #    visibility.is-getter: none
 
 spring.jpa.defer-datasource-initialization: true
+
