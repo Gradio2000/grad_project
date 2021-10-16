@@ -5,7 +5,11 @@ import com.graduation.project.model.User;
 import com.graduation.project.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.EnumSet;
 
@@ -24,4 +28,10 @@ public class UserController {
         user.setRoles(EnumSet.of(Role.USER_ROLE));
         return userService.save(user);
     }
+
+    @GetMapping(value = "/api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getAuthUser(@AuthenticationPrincipal Object authUser){
+        return authUser;
+    }
+
 }
