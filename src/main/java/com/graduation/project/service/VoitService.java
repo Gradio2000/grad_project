@@ -4,6 +4,7 @@ import com.graduation.project.model.Restaurant;
 import com.graduation.project.model.Voit;
 import com.graduation.project.repository.RestRepository;
 import com.graduation.project.repository.VoitRepository;
+import com.graduation.project.util.AuthUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -56,15 +57,17 @@ public class VoitService {
 
 
     //сервис записи голоса в БД
-    public ResponseEntity<Voit> addVoit(Voit voit) {
+    public ResponseEntity<Voit> addVoit(Voit voit, AuthUser authUser) {
         //проверяем, голосовал ли пользователь сегодня?
         LocalDateTime dateStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
         LocalDateTime dateFinish = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59));
         LocalTime localTime = LocalTime.of(11, 0);
-        Voit voit1 = voitRepository.findByLocalDate(dateStart, dateFinish, voit.getUserId());
+
+        Voit voit1 = voitRepository.findByLocalDate(dateStart, dateFinish, authUser.getUser().getUserId());
 
         //если не голосовал, то...
         if (voit1 == null){
+            voit.setUserId(authUser.getUser().getUserId());
             voit.setLocalDateTime(LocalDateTime.now());
             voitRepository.save(voit);
             return new ResponseEntity<>(voit, HttpStatus.CREATED);

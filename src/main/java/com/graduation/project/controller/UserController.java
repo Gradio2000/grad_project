@@ -5,6 +5,7 @@ import com.graduation.project.model.User;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,7 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @RestResource
     @PostMapping(value = "/api/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> register(@RequestBody User user) {
         user.setRoles(EnumSet.of(Role.USER));
@@ -46,6 +48,7 @@ public class UserController {
         return ResponseEntity.created(uriOfNewResource).body(user);
     }
 
+    @RestResource
     @GetMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>>  getAllUsers(){
         return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);

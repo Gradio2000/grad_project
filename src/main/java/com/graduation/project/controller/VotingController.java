@@ -4,9 +4,11 @@ import com.graduation.project.model.Restaurant;
 import com.graduation.project.model.Voit;
 import com.graduation.project.repository.VoitRepository;
 import com.graduation.project.service.VoitService;
+import com.graduation.project.util.AuthUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +27,8 @@ public class VotingController {
     }
 
     @PostMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Voit> putVoit(@RequestBody Voit voit){
-       return voitService.addVoit(voit);
+    public ResponseEntity<Voit> putVoit(@RequestBody Voit voit, @AuthenticationPrincipal AuthUser authUser){
+       return voitService.addVoit(voit, authUser);
     }
 
     @GetMapping(value = "/voits", produces = MediaType.APPLICATION_JSON_VALUE)

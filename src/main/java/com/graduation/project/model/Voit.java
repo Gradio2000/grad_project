@@ -14,6 +14,7 @@ public class Voit {
     @JsonIgnore
     private int voitId;
 
+    @JsonIgnore
     @Column(name = "user_id")
     private int userId;
 
