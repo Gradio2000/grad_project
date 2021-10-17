@@ -53,4 +53,31 @@ public class VoitService {
         return new ResponseEntity<>(restRepository.findAllById(set), HttpStatus.OK);
 
     }
+
+
+    //сервис записи голоса в БД
+    public ResponseEntity<Voit> addVoit(Voit voit) {
+        //проверяем, голосовал ли пользователь сегодня?
+        LocalDateTime dateStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
+        LocalDateTime dateFinish = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59));
+        LocalTime localTime = LocalTime.of(11, 0);
+        Voit voit1 = voitRepository.findByLocalDate(dateStart, dateFinish, voit.getUserId());
+
+        //если не голосовал, то...
+        if (voit1 == null){
+            voit.setLocalDateTime(LocalDateTime.now());
+            voitRepository.save(voit);
+            return new ResponseEntity<>(voit, HttpStatus.CREATED);
+        }
+        //если уже сегодня проголосовал до 11.00, то изменяем голос
+        if (voit1.getLocalDateTime().toLocalTime().isBefore(localTime)){
+            LocalDateTime localDateTime = LocalDateTime.now();
+            int voitId = voit1.getVoitId();
+            int restId = voit.getRestId();
+            voitRepository.update(voitId, localDateTime, restId);
+            return new ResponseEntity<>(voit, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.SEE_OTHER);
+    }
 }
