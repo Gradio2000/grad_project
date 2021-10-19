@@ -11,18 +11,21 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
+@RequestMapping("/api/users")
 @Tag(name = "UserController")
 public class UserController {
 
@@ -37,25 +40,40 @@ public class UserController {
     }
 
     @RestResource
-    @PostMapping(value = "/api/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> register(@RequestBody User user) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> register(@Valid @RequestBody User user) {
         user.setRoles(EnumSet.of(Role.USER));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.save(user);
+        user.setEmail(user.getEmail().toLowerCase());
+        User created = userService.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/users")
-                .build().toUri();
+                .path("/api/users/{id}")
+                .buildAndExpand(created.getUserId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(user);
     }
 
     @RestResource
-    @GetMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>>  getAllUsers(){
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getAllUsers(){
         return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getAuthUser(@AuthenticationPrincipal Object authUser){
-        return authUser;
+    @GetMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getAuthUser(@AuthenticationPrincipal Object authUser){
+        return new ResponseEntity<>(authUser, HttpStatus.OK);
+    }
+
+//    https://www.baeldung.com/spring-boot-bean-validation
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

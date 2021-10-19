@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -17,13 +20,20 @@ public class User {
     private int userId;
 
     @Column(name = "name")
+    @Size(max = 128, message = "size is too much")
+    @NotEmpty(message = "name mustn't be empty")
     private String name;
 
     @Column(name = "email")
+    @Email(message = "email isn't valid")
+    @NotEmpty(message = "email mustn't be empty")
+    @Size(max = 128, message = "size is too much")
     private String email;
 
     @Column(name = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Size(max = 256, message = "size is too much")
+    @NotEmpty(message = "password mustn't be empty")
     private String password;
 
     @Enumerated(EnumType.STRING)
