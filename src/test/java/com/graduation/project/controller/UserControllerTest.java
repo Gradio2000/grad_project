@@ -54,7 +54,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "user", password = "user")
-    public void testValidUser() throws Exception {
+    public void testRegisterValidUser() throws Exception {
         String user = "{\n" +
                 "\"name\": \"aaa\",\n" +
                 "\"email\": \"as@as.as\",\n" +
@@ -70,7 +70,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "user", password = "user")
-    public void testInvalidUser() throws Exception {
+    public void testRegisterInvalidUser() throws Exception {
         String user = "{\n" +
                 "\"name\": \"aaa\",\n" +
                 "\"email\": \"asas.as\",\n" +
@@ -85,4 +85,5 @@ public class UserControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn().getResponse().getContentAsString();
     }
+
 }
