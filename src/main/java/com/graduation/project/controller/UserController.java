@@ -4,8 +4,11 @@ import com.graduation.project.model.Role;
 import com.graduation.project.model.User;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.rest.core.annotation.RestResource;
+import com.graduation.project.util.AuthUser;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +21,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "UserController")
 public class UserController {
 
    private final UserService userService;
@@ -39,9 +40,16 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @RestResource
+    private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
+            new RepresentationModelAssemblerSupport<>(UserController.class, (Class<EntityModel<User>>) (Class<?>) EntityModel.class) {
+                @Override
+                public EntityModel<User> toModel(User user) {
+                    return EntityModel.of(user, linkTo(UserController.class).slash(user.getUserId()).withSelfRel());
+                }
+            };
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> register(@Valid @RequestBody User user) {
+    public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody User user) {
         user.setRoles(EnumSet.of(Role.USER));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEmail(user.getEmail().toLowerCase());
@@ -49,18 +57,24 @@ public class UserController {
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/users/{id}")
                 .buildAndExpand(created.getUserId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(user);
+        return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(user));
     }
 
-    @RestResource
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getAllUsers(){
-        return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<CollectionModel<EntityModel<User>>>  getAllUsers(){
+        Link link = linkTo(UserController.class).withSelfRel();
+        List<User> userList = userRepository.findAll();
+        List<EntityModel<User>> entityModels = new ArrayList<>();
+        for (User user : userList){
+            EntityModel<User> entityModel = ASSEMBLER.toModel(user);
+            entityModels.add(entityModel);
+        }
+        return new ResponseEntity<>(CollectionModel.of(entityModels, link), HttpStatus.OK);
     }
 
     @GetMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getAuthUser(@AuthenticationPrincipal Object authUser){
-        return new ResponseEntity<>(authUser, HttpStatus.OK);
+    public ResponseEntity<EntityModel<User>> getAuthUser(@AuthenticationPrincipal AuthUser authUser){
+        return new ResponseEntity<>(ASSEMBLER.toModel(authUser.getUser()), HttpStatus.OK);
     }
 
 //    https://www.baeldung.com/spring-boot-bean-validation
