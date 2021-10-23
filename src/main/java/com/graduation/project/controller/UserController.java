@@ -21,7 +21,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -72,10 +75,28 @@ public class UserController {
         return new ResponseEntity<>(CollectionModel.of(entityModels, link), HttpStatus.OK);
     }
 
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EntityModel<User>> changeUser(@RequestBody User user, @AuthenticationPrincipal AuthUser authUser){
+        User oldUser = authUser.getUser();
+        if (user.getEmail() != null){
+            oldUser.setEmail(user.getEmail());
+        }
+        if (user.getPassword() != null){
+            oldUser.setPassword(user.getPassword());
+        }
+        if (user.getName() != null){
+            oldUser.setName(user.getName());
+        }
+       return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.save(oldUser)), HttpStatus.OK) ;
+    }
+
+
     @GetMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> getAuthUser(@AuthenticationPrincipal AuthUser authUser){
         return new ResponseEntity<>(ASSEMBLER.toModel(authUser.getUser()), HttpStatus.OK);
     }
+
+
 
 //    https://www.baeldung.com/spring-boot-bean-validation
     @ResponseStatus(HttpStatus.BAD_REQUEST)
