@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -62,13 +63,12 @@ public class UserController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<User>>>  getAllUsers(){
+
+        List<EntityModel<User>> entityModels = userRepository.findAll().stream()
+                .map(ASSEMBLER::toModel)
+                .collect(Collectors.toList());
+
         Link link = linkTo(UserController.class).withSelfRel();
-        List<User> userList = userRepository.findAll();
-        List<EntityModel<User>> entityModels = new ArrayList<>();
-        for (User user : userList){
-            EntityModel<User> entityModel = ASSEMBLER.toModel(user);
-            entityModels.add(entityModel);
-        }
         return new ResponseEntity<>(CollectionModel.of(entityModels, link), HttpStatus.OK);
     }
 
