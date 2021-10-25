@@ -32,7 +32,7 @@ public class UserControllerTest {
     DishRepository dishRepository;
 
     @MockBean
-    UserController userController;
+    UserAccessController userController;
 
     @MockBean
     DishController dishController;

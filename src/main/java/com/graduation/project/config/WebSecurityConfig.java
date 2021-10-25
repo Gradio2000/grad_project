@@ -28,7 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.userRepository = userRepositoryl;
     }
 
-
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -43,12 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     () -> new UsernameNotFoundException("User '" + name + "' was not found")));
         };
     }
-
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsServiceBean())
-//                .passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
-//    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
