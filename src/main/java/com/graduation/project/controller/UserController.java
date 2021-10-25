@@ -76,7 +76,7 @@ public class UserController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<User>> changeUser(@RequestBody User user, @AuthenticationPrincipal AuthUser authUser){
+    public ResponseEntity<EntityModel<User>> changeUser(@Valid @RequestBody User user, @AuthenticationPrincipal AuthUser authUser){
         User oldUser = authUser.getUser();
         if (user.getEmail() != null){
             oldUser.setEmail(user.getEmail());

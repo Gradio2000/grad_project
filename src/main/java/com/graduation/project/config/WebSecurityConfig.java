@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
@@ -29,6 +29,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
     @Bean
     public UserDetailsService userDetailsServiceBean() {
@@ -39,10 +44,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userDetailsServiceBean())
+//                .passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
+//    }
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsServiceBean())
-                .passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
+        auth
+                .userDetailsService(userDetailsServiceBean())
+                .passwordEncoder(bCryptPasswordEncoder());
     }
 
     @Override
