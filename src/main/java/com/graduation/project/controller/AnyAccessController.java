@@ -3,6 +3,7 @@ package com.graduation.project.controller;
 import com.graduation.project.model.Role;
 import com.graduation.project.model.User;
 import com.graduation.project.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,9 @@ import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-@RestController
+@RestController()
 @RequestMapping("/api/users")
+@Tag(name = "Anybody access controller")
 public class AnyAccessController {
 
     private final PasswordEncoder passwordEncoder;

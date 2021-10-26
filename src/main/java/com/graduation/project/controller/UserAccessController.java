@@ -1,8 +1,11 @@
 package com.graduation.project.controller;
 
 import com.graduation.project.model.User;
+import com.graduation.project.model.Voit;
 import com.graduation.project.repository.UserRepository;
+import com.graduation.project.service.VoitService;
 import com.graduation.project.util.AuthUser;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
@@ -16,15 +19,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
 @RestController
-@RequestMapping("/api/user/users")
+@RequestMapping("/api/user")
+@Tag(name = "User access controller")
 public class UserAccessController {
 
    private final PasswordEncoder passwordEncoder;
    private final UserRepository userRepository;
+    private final VoitService voitService;
 
-    public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+
+    public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository, VoitService voitService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.voitService = voitService;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -36,7 +43,7 @@ public class UserAccessController {
             };
 
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> changeUser(@RequestBody User user, @AuthenticationPrincipal AuthUser authUser){
         User oldUser = authUser.getUser();
         if (user.getEmail() != null){
@@ -55,6 +62,11 @@ public class UserAccessController {
     @GetMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> getAuthUser(@AuthenticationPrincipal AuthUser authUser){
         return new ResponseEntity<>(ASSEMBLER.toModel(authUser.getUser()), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Voit> putVoit(@RequestBody Voit voit, @AuthenticationPrincipal AuthUser authUser){
+        return voitService.addVoit(voit, authUser);
     }
 
 }

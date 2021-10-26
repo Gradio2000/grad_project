@@ -1,7 +1,12 @@
 package com.graduation.project.controller;
 
+import com.graduation.project.model.Restaurant;
 import com.graduation.project.model.User;
+import com.graduation.project.model.Voit;
 import com.graduation.project.repository.UserRepository;
+import com.graduation.project.repository.VoitRepository;
+import com.graduation.project.service.VoitService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -19,14 +24,19 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
-@RequestMapping("/api/admin/users")
+@RequestMapping("/api/admin")
+@Tag(name = "Admin access controller")
 public class AdminAccessController {
 
 
     private final UserRepository userRepository;
+    private final VoitRepository voitRepository;
+    private final VoitService voitService;
 
-    public AdminAccessController(UserRepository userRepository) {
+    public AdminAccessController(UserRepository userRepository, VoitRepository voitRepository, VoitService voitService) {
         this.userRepository = userRepository;
+        this.voitRepository = voitRepository;
+        this.voitService = voitService;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -37,7 +47,7 @@ public class AdminAccessController {
                 }
             };
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<User>>> getAllUsers(){
 
         List<EntityModel<User>> entityModels = userRepository.findAll().stream()
@@ -46,6 +56,16 @@ public class AdminAccessController {
 
         Link link = linkTo(UserAccessController.class).withSelfRel();
         return new ResponseEntity<>(CollectionModel.of(entityModels, link), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/voits", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Voit> getVoitLst(){
+        return voitRepository.findAll();
+    }
+
+    @GetMapping("/result")
+    public ResponseEntity<List<Restaurant>> getResult(){
+        return voitService.getResult();
     }
 
 }
