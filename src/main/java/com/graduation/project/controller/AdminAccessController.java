@@ -79,4 +79,9 @@ public class AdminAccessController {
         dishRepository.save(dish);
         return new ResponseEntity<>(dish, HttpStatus.CREATED);
     }
+
+    @GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EntityModel<User>> getUserById(@PathVariable Integer id){
+        return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.getById(id)), HttpStatus.OK);
+    }
 }

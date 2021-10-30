@@ -12,4 +12,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("select u from User u where u.name = :name")
     Optional<User> findByName(String name);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM USERS WHERE USER_ID = :id")
+    @Override
+    User getById(Integer id);
 }

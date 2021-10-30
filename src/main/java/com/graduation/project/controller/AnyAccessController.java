@@ -38,11 +38,12 @@ public class AnyAccessController {
 
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
-            new RepresentationModelAssemblerSupport<>(UserAccessController.class, (Class<EntityModel<User>>) (Class<?>) EntityModel.class) {
-                @Override
+            new RepresentationModelAssemblerSupport<>(AnyAccessController.class, (Class<EntityModel<User>>) (Class<?>) EntityModel.class) {
+
                 public EntityModel<User> toModel(User user) {
-                    return EntityModel.of(user, linkTo(UserAccessController.class).slash(user.getUserId()).withSelfRel());
+                    return EntityModel.of(user, linkTo(AdminAccessController.class).slash("users/" + user.getUserId()).withSelfRel());
                 }
+
             };
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -52,10 +53,11 @@ public class AnyAccessController {
         user.setEmail(user.getEmail().toLowerCase());
         User created = userService.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/users/{id}")
+                .path("/api/admin/users/{id}")
                 .buildAndExpand(created.getUserId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(user));
     }
+
 
     //    https://www.baeldung.com/spring-boot-bean-validation
     @ResponseStatus(HttpStatus.BAD_REQUEST)
