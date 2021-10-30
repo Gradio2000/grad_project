@@ -35,9 +35,6 @@ public class UserControllerTest {
     UserAccessController userController;
 
     @MockBean
-    DishController dishController;
-
-    @MockBean
     UserService userService;
 
     @MockBean

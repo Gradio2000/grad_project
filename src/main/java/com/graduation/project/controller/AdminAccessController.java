@@ -1,8 +1,10 @@
 package com.graduation.project.controller;
 
+import com.graduation.project.model.Dish;
 import com.graduation.project.model.Restaurant;
 import com.graduation.project.model.User;
 import com.graduation.project.model.Voit;
+import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoitRepository;
 import com.graduation.project.service.VoitService;
@@ -14,10 +16,9 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,11 +33,15 @@ public class AdminAccessController {
     private final UserRepository userRepository;
     private final VoitRepository voitRepository;
     private final VoitService voitService;
+    private final DishRepository dishRepository;
 
-    public AdminAccessController(UserRepository userRepository, VoitRepository voitRepository, VoitService voitService) {
+
+    public AdminAccessController(UserRepository userRepository, VoitRepository voitRepository,
+                                 VoitService voitService, DishRepository dishRepository) {
         this.userRepository = userRepository;
         this.voitRepository = voitRepository;
         this.voitService = voitService;
+        this.dishRepository = dishRepository;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -68,4 +73,10 @@ public class AdminAccessController {
         return voitService.getResult();
     }
 
+    @PostMapping(value = "/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Dish> saveDish(@RequestBody Dish dish){
+        dish.setLocalDateTime(LocalDateTime.now());
+        dishRepository.save(dish);
+        return new ResponseEntity<>(dish, HttpStatus.CREATED);
+    }
 }
