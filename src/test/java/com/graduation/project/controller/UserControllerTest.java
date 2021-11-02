@@ -48,7 +48,6 @@ public class UserControllerTest {
 
 
     @Test
-//    @WithMockUser(username = "user", password = "user")
     public void testRegisterValidUser() throws Exception    {
         String user = "{\n" +
                 "\"name\": \"aaa\",\n" +
@@ -60,11 +59,9 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                         .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
-
     }
 
     @Test
-//    @WithMockUser(username = "user", password = "user")
     public void testRegisterInvalidUser() throws Exception {
         String user = "{\n" +
                 "\"name\": \"aaa\",\n" +
