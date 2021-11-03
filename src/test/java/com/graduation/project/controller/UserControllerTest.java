@@ -38,9 +38,6 @@ public class UserControllerTest {
     VoitService voitService;
 
     @MockBean
-    RestaurantController restaurantController;
-
-    @MockBean
     AnyAccessController anyAccessController;
 
     @Autowired
