@@ -16,7 +16,7 @@ JDK 15, Spring Boot 2.5, H2, Caffeine Cache, Swagger/OpenAPI 3.0
 [REST API documentation](http://localhost:8080/swagger-ui.html)  
 
 -----------------------------------------------------
-####Credentions:
+#### Credentions:
 ```
 User:  user / user
 Admin: admin / admin
