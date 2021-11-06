@@ -1,13 +1,10 @@
 package com.graduation.project.controller;
 
 import com.graduation.project.model.Dish;
-import com.graduation.project.model.Restaurant;
 import com.graduation.project.model.User;
-import com.graduation.project.model.Voit;
 import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoitRepository;
-import com.graduation.project.service.VoitService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -18,7 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,15 +29,13 @@ public class AdminAccessController {
 
     private final UserRepository userRepository;
     private final VoitRepository voitRepository;
-    private final VoitService voitService;
     private final DishRepository dishRepository;
 
 
     public AdminAccessController(UserRepository userRepository, VoitRepository voitRepository,
-                                 VoitService voitService, DishRepository dishRepository) {
+                                DishRepository dishRepository) {
         this.userRepository = userRepository;
         this.voitRepository = voitRepository;
-        this.voitService = voitService;
         this.dishRepository = dishRepository;
     }
 
@@ -63,25 +58,21 @@ public class AdminAccessController {
         return new ResponseEntity<>(CollectionModel.of(entityModels, link), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/voits", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Voit> getVoitLst(){
-        return voitRepository.findAll();
-    }
+//    @GetMapping(value = "/voits", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public List<Voit> getVoitLst(){
+//        return voitRepository.findAll();
+//    }
 
-    @GetMapping("/result")
-    public ResponseEntity<List<Restaurant>> getResult(){
-        return voitService.getResult();
-    }
 
     @PostMapping(value = "/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> saveDish(@RequestBody Dish dish){
-        dish.setLocalDateTime(LocalDateTime.now());
+        dish.setLocalDate(LocalDate.now());
         dishRepository.save(dish);
         return new ResponseEntity<>(dish, HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<User>> getUserById(@PathVariable Integer id){
-        return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.getById(id)), HttpStatus.OK);
-    }
+//    @GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<EntityModel<User>> getUserById(@PathVariable Integer id){
+//        return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.getById(id)), HttpStatus.OK);
+//    }
 }

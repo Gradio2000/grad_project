@@ -3,7 +3,6 @@ package com.graduation.project.controller;
 import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoitRepository;
-import com.graduation.project.service.VoitService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ public class UserControllerTest {
 
     @MockBean
     VoitRepository voitRepository;
-
-    @MockBean
-    VoitService voitService;
 
     @MockBean
     AnyAccessController anyAccessController;

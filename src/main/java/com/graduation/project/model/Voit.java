@@ -3,10 +3,12 @@ package com.graduation.project.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
-@Table(name = "voit")
+@Table(name = "voit",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date"}, name = "user_date_unique")})
 public class Voit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +25,11 @@ public class Voit {
 
     @Column(name = "date")
     @JsonIgnore
-    private LocalDateTime localDateTime;
+    private LocalDate localDate;
+
+    @Column(name = "time")
+    @JsonIgnore
+    private LocalTime localTime;
 
     public Voit(int userId, int restId) {
         this.userId = userId;
@@ -57,11 +63,19 @@ public class Voit {
         this.restId = restId;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public LocalDate getLocalDate() {
+        return localDate;
     }
 
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public void setLocalDate(LocalDate localDateTime) {
+        this.localDate = localDateTime;
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
     }
 }

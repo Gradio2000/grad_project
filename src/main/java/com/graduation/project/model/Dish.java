@@ -3,10 +3,11 @@ package com.graduation.project.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "dish")
+@Table(name = "dish",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"rest_id", "date"}, name = "rest_date_unique")})
 public class Dish {
 
     @Id
@@ -16,7 +17,8 @@ public class Dish {
     private int dishId;
 
     @Column(name = "date")
-    private LocalDateTime localDateTime;
+    @JsonIgnore
+    private LocalDate localDate;
 
     @Column(name = "dish")
     private String dish;
@@ -35,12 +37,12 @@ public class Dish {
         this.dishId = dih_id;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public LocalDate getLocalDate() {
+        return localDate;
     }
 
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public void setLocalDate(LocalDate localDateTime) {
+        this.localDate = localDateTime;
     }
 
     public String getDish() {
