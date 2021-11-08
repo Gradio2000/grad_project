@@ -42,7 +42,7 @@ class RestaurantControllerTest {
     private MockMvc mockMvc;
 
 
-    private final String URL = "/api/admin/restaurants";
+    private final String URL = "/api/restaurants";
 
     @Test
     void getAllRest() throws Exception {

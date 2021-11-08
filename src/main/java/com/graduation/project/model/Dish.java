@@ -6,8 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dish",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"rest_id", "date"}, name = "rest_date_unique")})
+@Table(name = "dish")
 public class Dish {
 
     @Id

@@ -28,14 +28,12 @@ public class AdminAccessController {
 
 
     private final UserRepository userRepository;
-    private final VoitRepository voitRepository;
     private final DishRepository dishRepository;
 
 
     public AdminAccessController(UserRepository userRepository, VoitRepository voitRepository,
                                 DishRepository dishRepository) {
         this.userRepository = userRepository;
-        this.voitRepository = voitRepository;
         this.dishRepository = dishRepository;
     }
 
@@ -58,11 +56,6 @@ public class AdminAccessController {
         return new ResponseEntity<>(CollectionModel.of(entityModels, link), HttpStatus.OK);
     }
 
-//    @GetMapping(value = "/voits", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public List<Voit> getVoitLst(){
-//        return voitRepository.findAll();
-//    }
-
 
     @PostMapping(value = "/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> saveDish(@RequestBody Dish dish){
@@ -71,8 +64,6 @@ public class AdminAccessController {
         return new ResponseEntity<>(dish, HttpStatus.CREATED);
     }
 
-//    @GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<EntityModel<User>> getUserById(@PathVariable Integer id){
-//        return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.getById(id)), HttpStatus.OK);
-//    }
+
+
 }
