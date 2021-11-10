@@ -2,6 +2,7 @@ package com.graduation.project.controller;
 
 import com.graduation.project.model.User;
 import com.graduation.project.model.Voit;
+import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoitRepository;
 import com.graduation.project.util.AuthUser;
@@ -32,11 +33,14 @@ public class UserAccessController {
    private final PasswordEncoder passwordEncoder;
    private final UserRepository userRepository;
    private final VoitRepository voitRepository;
+   private final DishRepository dishRepository;
 
-    public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository, VoitRepository voitRepository) {
+    public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository,
+                                VoitRepository voitRepository, DishRepository dishRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.voitRepository = voitRepository;
+        this.dishRepository = dishRepository;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -85,4 +89,5 @@ public class UserAccessController {
         errors.put("error", "Vote is already exist");
         return errors;
     }
+
 }

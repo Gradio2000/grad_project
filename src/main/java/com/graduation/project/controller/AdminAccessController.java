@@ -1,6 +1,5 @@
 package com.graduation.project.controller;
 
-import com.graduation.project.model.Dish;
 import com.graduation.project.model.User;
 import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.UserRepository;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,12 +58,7 @@ public class AdminAccessController {
     }
 
 
-    @PostMapping(value = "/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> saveDish(@RequestBody Dish dish){
-        dish.setLocalDate(LocalDate.now());
-        dishRepository.save(dish);
-        return new ResponseEntity<>(dish, HttpStatus.CREATED);
-    }
+
 
 
     @GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,12 +67,6 @@ public class AdminAccessController {
     }
 
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(JdbcSQLIntegrityConstraintViolationException.class)
-    public Map<String, String> handleExceptions(JdbcSQLIntegrityConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("error", "Restaurant is not present");
-        return errors;
-    }
+
 
 }

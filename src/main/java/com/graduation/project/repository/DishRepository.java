@@ -43,6 +43,9 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
     @Override
     @RestResource(exported = false)
     <S extends Dish> Page<S> findAll(Example<S> example, Pageable pageable);
+
+    @RestResource(exported = false)
+    List<Dish>findAllByRestId(Integer id);
 }
 
 
