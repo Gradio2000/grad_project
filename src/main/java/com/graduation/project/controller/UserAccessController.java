@@ -7,7 +7,6 @@ import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoitRepository;
 import com.graduation.project.util.AuthUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
@@ -19,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -82,12 +79,6 @@ public class UserAccessController {
         return new ResponseEntity<>(voit, HttpStatus.CREATED);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(JdbcSQLIntegrityConstraintViolationException.class)
-    public Map<String, String> handleExceptions(JdbcSQLIntegrityConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("error", "Vote is already exist");
-        return errors;
-    }
+
 
 }
