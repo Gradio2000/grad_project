@@ -18,7 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -98,5 +100,22 @@ public class RestaurantController {
     public HttpStatus deleteRest(@PathVariable Integer id){
         restaurantRepository.deleteById(id);
         return HttpStatus.NO_CONTENT;
+    }
+
+    @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EntityModel<Restaurant>> patchRestById(@PathVariable Integer id,
+                                                                 @RequestBody Restaurant newRestaurant){
+        Restaurant oldRestaurant = restaurantRepository.getById(id);
+        oldRestaurant.setName(newRestaurant.getName());
+        restaurantRepository.save(oldRestaurant);
+        return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(oldRestaurant), HttpStatus.OK);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Map<String, String>> restaurantPatchingException() {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Restaurant is not found on DB");
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }

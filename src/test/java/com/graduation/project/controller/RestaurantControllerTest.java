@@ -50,7 +50,7 @@ class RestaurantControllerTest {
 
     @Test
     void getAllRest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(URL).param("page", "1"))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }

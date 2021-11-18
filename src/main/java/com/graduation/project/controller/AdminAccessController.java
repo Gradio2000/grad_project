@@ -5,7 +5,6 @@ import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoitRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -58,15 +57,18 @@ public class AdminAccessController {
     }
 
 
-
-
-
     @GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> getUserById(@PathVariable Integer id){
         return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.getById(id)), HttpStatus.OK);
     }
 
-
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Map<String, String>> restaurantPatchingException() {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "User is not found on DB");
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
 
 
 }

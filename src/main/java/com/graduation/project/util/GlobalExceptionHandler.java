@@ -1,6 +1,7 @@
 package com.graduation.project.util;
 
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Map<String, String>> restaurantDeletingException() {
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "Restaurant is not found on DB");
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, String>> userPatchingException(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ex.getConstraintName(), ex.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }
