@@ -93,4 +93,10 @@ public class RestaurantController {
 
         return new ResponseEntity<>(pagedModel, HttpStatus.OK);
     }
+
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpStatus deleteRest(@PathVariable Integer id){
+        restaurantRepository.deleteById(id);
+        return HttpStatus.NO_CONTENT;
+    }
 }

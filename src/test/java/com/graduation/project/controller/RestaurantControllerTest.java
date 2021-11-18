@@ -1,6 +1,7 @@
 package com.graduation.project.controller;
 
 import com.graduation.project.repository.DishRepository;
+import com.graduation.project.repository.RestaurantRepository;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoitRepository;
 import org.junit.jupiter.api.Test;
@@ -36,17 +37,20 @@ class RestaurantControllerTest {
     VoitRepository voitRepository;
 
     @MockBean
+    RestaurantRepository repository;
+
+    @MockBean
     AnyAccessController anyAccessController;
 
     @Autowired
     private MockMvc mockMvc;
 
 
-    private final String URL = "/api/restaurants";
+    private final String URL = "/api/admin/restaurants";
 
     @Test
     void getAllRest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(URL))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL).param("page", "1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -57,7 +61,7 @@ class RestaurantControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
                         .content(restaurant)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andDo(MockMvcResultHandlers.print());
     }
 

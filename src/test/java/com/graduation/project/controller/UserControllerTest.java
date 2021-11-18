@@ -1,6 +1,7 @@
 package com.graduation.project.controller;
 
 import com.graduation.project.repository.DishRepository;
+import com.graduation.project.repository.RestaurantRepository;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoitRepository;
 import org.junit.Test;
@@ -35,6 +36,9 @@ public class UserControllerTest {
 
     @MockBean
     AnyAccessController anyAccessController;
+
+    @MockBean
+    RestaurantRepository repository;
 
     @Autowired
     private MockMvc mockMvc;
