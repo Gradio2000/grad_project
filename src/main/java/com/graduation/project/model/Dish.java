@@ -25,6 +25,7 @@ public class Dish {
     @Column(name = "price")
     private double price;
 
+    @JsonIgnore
     @Column(name = "rest_id")
     private int restId;
 

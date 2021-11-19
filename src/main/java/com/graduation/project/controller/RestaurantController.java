@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class RestaurantController {
     }
 
     @GetMapping(value = "/{id}/dishList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CollectionModel<EntityModel<Dish>>> getAllDish(@PathVariable Integer id){
+    public ResponseEntity<CollectionModel<EntityModel<Dish>>> getAllDishByRestId(@PathVariable Integer id){
 
         List<EntityModel<Dish>> entityModels = dishRepository.findAllByRestId(id).stream()
                 .map(ASSEMBLER_DISH::toModel)
@@ -80,6 +81,21 @@ public class RestaurantController {
 
         Link restaurants = linkTo(RestaurantController.class).withSelfRel();
         return new ResponseEntity<>(CollectionModel.of(entityModels, restaurants), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/{id}/dishList", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CollectionModel<EntityModel<Dish>>> addDishListByRestId(@PathVariable Integer id, @RequestBody List<Dish> dishList){
+        dishList.forEach(dish1 -> {
+            dish1.setRestId(id);
+            dish1.setLocalDate(LocalDate.now());
+        });
+
+        List<EntityModel<Dish>> entityModels = dishRepository.saveAll(dishList).stream()
+                .map(ASSEMBLER_DISH::toModel)
+                .collect(Collectors.toList());
+
+
+        return new ResponseEntity<>(CollectionModel.of(entityModels), HttpStatus.OK);
     }
 
 

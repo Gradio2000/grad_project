@@ -24,6 +24,7 @@ public class Restaurant {
             cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "rest_id")
+    @JsonIgnore
     private List<Dish> dishList;
 
     public int getRestId() {
