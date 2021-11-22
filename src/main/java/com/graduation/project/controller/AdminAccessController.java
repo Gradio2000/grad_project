@@ -1,10 +1,11 @@
 package com.graduation.project.controller;
 
 import com.graduation.project.model.User;
-import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.UserRepository;
-import com.graduation.project.repository.VoitRepository;
+import com.graduation.project.util.AuthUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -12,6 +13,7 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,16 +27,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequestMapping("/api/admin")
 @Tag(name = "Admin access controller")
 public class AdminAccessController {
-
-
+    final Logger logger = LoggerFactory.getLogger(AdminAccessController.class);
     private final UserRepository userRepository;
-    private final DishRepository dishRepository;
 
-
-    public AdminAccessController(UserRepository userRepository, VoitRepository voitRepository,
-                                DishRepository dishRepository) {
+    public AdminAccessController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.dishRepository = dishRepository;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -46,8 +43,8 @@ public class AdminAccessController {
             };
 
     @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CollectionModel<EntityModel<User>>> getAllUsers(){
-
+    public ResponseEntity<CollectionModel<EntityModel<User>>> getAllUsers(@AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into getAllUsers");
         List<EntityModel<User>> entityModels = userRepository.findAll().stream()
                 .map(ASSEMBLER::toModel)
                 .collect(Collectors.toList());
@@ -58,7 +55,9 @@ public class AdminAccessController {
 
 
     @GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<User>> getUserById(@PathVariable Integer id){
+    public ResponseEntity<EntityModel<User>> getUserById(@PathVariable Integer id,
+                                                         @AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into getUserById");
         return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.getById(id)), HttpStatus.OK);
     }
 

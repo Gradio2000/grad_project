@@ -2,11 +2,12 @@ package com.graduation.project.controller;
 
 import com.graduation.project.model.User;
 import com.graduation.project.model.Voit;
-import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoitRepository;
 import com.graduation.project.util.AuthUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
@@ -26,18 +27,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequestMapping("/api/user")
 @Tag(name = "User access controller")
 public class UserAccessController {
+    final Logger logger = LoggerFactory.getLogger(UserAccessController.class);
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final VoitRepository voitRepository;
 
-   private final PasswordEncoder passwordEncoder;
-   private final UserRepository userRepository;
-   private final VoitRepository voitRepository;
-   private final DishRepository dishRepository;
 
     public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository,
-                                VoitRepository voitRepository, DishRepository dishRepository) {
+                                VoitRepository voitRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.voitRepository = voitRepository;
-        this.dishRepository = dishRepository;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -50,7 +50,10 @@ public class UserAccessController {
 
 
     @PutMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<User>> changeUser(@RequestBody User user, @AuthenticationPrincipal AuthUser authUser){
+    public ResponseEntity<EntityModel<User>> changeUser(@RequestBody User user,
+                                                        @AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into changeUser");
+
         User oldUser = authUser.getUser();
         if (user.getEmail() != null){
             oldUser.setEmail(user.getEmail());
@@ -67,18 +70,20 @@ public class UserAccessController {
 
     @GetMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> getAuthUser(@AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into getAuthUser");
+
         return new ResponseEntity<>(ASSEMBLER.toModel(authUser.getUser()), HttpStatus.OK);
     }
 
     @PostMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Voit> putVoit(@RequestBody Voit voit, @AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into putVoit");
+
         voit.setUserId(authUser.getUser().getUserId());
         voit.setLocalDate(LocalDate.now());
         voit.setLocalTime(LocalTime.now());
         voitRepository.save(voit);
         return new ResponseEntity<>(voit, HttpStatus.CREATED);
     }
-
-
 
 }

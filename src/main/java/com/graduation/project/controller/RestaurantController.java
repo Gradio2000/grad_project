@@ -4,7 +4,10 @@ import com.graduation.project.model.Dish;
 import com.graduation.project.model.Restaurant;
 import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.RestaurantRepository;
+import com.graduation.project.util.AuthUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -16,6 +19,7 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -30,12 +34,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequestMapping("/api/admin/restaurants")
 @Tag(name = "Restaurant controller", description = "CRUD restaurants")
 public class RestaurantController {
+    final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
     private final PagedResourcesAssembler<Restaurant> pagedResourcesAssembler;
 
-    public RestaurantController(RestaurantRepository restaurantRepository, DishRepository dishRepository, PagedResourcesAssembler<Restaurant> pagedResourcesAssembler) {
+    public RestaurantController(RestaurantRepository restaurantRepository, DishRepository dishRepository,
+                                PagedResourcesAssembler<Restaurant> pagedResourcesAssembler) {
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
@@ -52,7 +58,7 @@ public class RestaurantController {
             };
 
     private static final RepresentationModelAssemblerSupport<Dish, EntityModel<Dish>> ASSEMBLER_DISH =
-            new RepresentationModelAssemblerSupport<>(DishController.class, (Class<EntityModel<Dish>>) (Class<?>) EntityModel.class) {
+            new RepresentationModelAssemblerSupport<>(DishRepository.class, (Class<EntityModel<Dish>>) (Class<?>) EntityModel.class) {
                 @Override
                 public EntityModel<Dish> toModel(Dish dish) {
                     Link restaurantLink = linkTo(RestaurantController.class).slash(dish.getRestId()).withRel("restaurant");
@@ -61,19 +67,25 @@ public class RestaurantController {
             };
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<Restaurant>> addRest(@RequestBody Restaurant restaurant){
+    public ResponseEntity<EntityModel<Restaurant>> addRest(@RequestBody Restaurant restaurant,
+                                                           @AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into addRest");
+
         restaurantRepository.save(restaurant);
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<Restaurant>> getRestById(@PathVariable Integer id){
+    public ResponseEntity<EntityModel<Restaurant>> getRestById(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into getRestById");
+
         Restaurant restaurant = restaurantRepository.getById(id);
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/dishList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CollectionModel<EntityModel<Dish>>> getAllDishByRestId(@PathVariable Integer id){
+    public ResponseEntity<CollectionModel<EntityModel<Dish>>> getAllDishByRestId(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into getAllDishByRestId");
 
         List<EntityModel<Dish>> entityModels = dishRepository.findAllByRestId(id).stream()
                 .map(ASSEMBLER_DISH::toModel)
@@ -84,7 +96,11 @@ public class RestaurantController {
     }
 
     @PostMapping(value = "/{id}/dishList", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CollectionModel<EntityModel<Dish>>> addDishListByRestId(@PathVariable Integer id, @RequestBody List<Dish> dishList){
+    public ResponseEntity<CollectionModel<EntityModel<Dish>>> addDishListByRestId(@PathVariable Integer id,
+                                                                                  @RequestBody List<Dish> dishList,
+                                                                                  @AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into addDishListByRestId");
+
         dishList.forEach(dish1 -> {
             dish1.setRestId(id);
             dish1.setLocalDate(LocalDate.now());
@@ -94,16 +110,17 @@ public class RestaurantController {
                 .map(ASSEMBLER_DISH::toModel)
                 .collect(Collectors.toList());
 
-
         return new ResponseEntity<>(CollectionModel.of(entityModels), HttpStatus.OK);
     }
 
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PagedModel<EntityModel<Restaurant>>> getAllRest(
-            @RequestParam (defaultValue = "0") Integer page,
-            @RequestParam (defaultValue = "20") Integer size){
+    public ResponseEntity<PagedModel<EntityModel<Restaurant>>> getAllRest(@AuthenticationPrincipal AuthUser authUser,
+                                                        @RequestParam (defaultValue = "0") Integer page,
+                                                        @RequestParam (defaultValue = "20") Integer size){
+        logger.info(authUser.getUser().getName() + " enter into getAllRest");
+
 
         Page<Restaurant> restaurantPage = restaurantRepository.findAll(PageRequest.of(page, size));
         PagedModel<EntityModel<Restaurant>> pagedModel =
@@ -113,14 +130,19 @@ public class RestaurantController {
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpStatus deleteRest(@PathVariable Integer id){
+    public HttpStatus deleteRest(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into deleteRest");
+
         restaurantRepository.deleteById(id);
         return HttpStatus.NO_CONTENT;
     }
 
     @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<Restaurant>> patchRestById(@PathVariable Integer id,
-                                                                 @RequestBody Restaurant newRestaurant){
+                                                                 @RequestBody Restaurant newRestaurant,
+                                                                 @AuthenticationPrincipal AuthUser authUser){
+        logger.info(authUser.getUser().getName() + " enter into patchRestById");
+
         Restaurant oldRestaurant = restaurantRepository.getById(id);
         oldRestaurant.setName(newRestaurant.getName());
         restaurantRepository.save(oldRestaurant);
