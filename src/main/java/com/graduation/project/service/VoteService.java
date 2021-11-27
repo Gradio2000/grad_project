@@ -22,14 +22,14 @@ public class VoteService {
 
     //insert vote into db
     public ResponseEntity<Vote> addVoit(Vote vote, AuthUser authUser) throws VoteException {
-        //проверяем, голосовал ли пользователь сегодня?
+        //checking if the user voted today?
         LocalDateTime dateStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
         LocalDateTime dateFinish = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59));
         LocalTime localTime = LocalTime.of(11, 0);
 
         Vote voteFromDB = voteRepository.findByLocalDate(dateStart, dateFinish, authUser.getUser().getUserId());
 
-        //если не голосовал, то...
+        // if not voted, then...
         if (voteFromDB == null){
             vote.setUserId(authUser.getUser().getUserId());
             vote.setLocalDateTime(LocalDateTime.now());
@@ -37,7 +37,7 @@ public class VoteService {
             return new ResponseEntity<>(vote, HttpStatus.CREATED);
         }
 
-        //если уже сегодня проголосовал до 11.00, то изменяем голос
+        // if user have already voted before 11.00, then we change the vote
         if (voteFromDB.getLocalDateTime().toLocalTime().isBefore(localTime)){
             LocalDateTime localDateTime = LocalDateTime.now();
             int voitId = voteFromDB.getVoitId();
@@ -46,8 +46,8 @@ public class VoteService {
             return new ResponseEntity<>(vote, HttpStatus.OK);
         }
 
+        // if user have already voted after 11.00, throw new VoteException
         throw new VoteException();
-//        return new ResponseEntity<>(HttpStatus.SEE_OTHER);
     }
 }
 
