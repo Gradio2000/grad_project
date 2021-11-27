@@ -1,6 +1,5 @@
 package com.graduation.project.util;
 
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -17,21 +16,12 @@ import java.util.Map;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(JdbcSQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<Map<String, String>> voitingException() {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("error", "Vote is already exist!");
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<Map<String, String>> restaurantDeletingException() {
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "Restaurant is not found on DB");
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-
 
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

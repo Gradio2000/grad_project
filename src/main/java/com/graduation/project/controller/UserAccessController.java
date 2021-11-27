@@ -1,10 +1,12 @@
 package com.graduation.project.controller;
 
 import com.graduation.project.model.User;
-import com.graduation.project.model.Voit;
+import com.graduation.project.model.Vote;
 import com.graduation.project.repository.UserRepository;
-import com.graduation.project.repository.VoitRepository;
+import com.graduation.project.repository.VoteRepository;
+import com.graduation.project.service.VoteService;
 import com.graduation.project.util.AuthUser;
+import com.graduation.project.util.VoteException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +19,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -30,14 +32,15 @@ public class UserAccessController {
     final Logger logger = LoggerFactory.getLogger(UserAccessController.class);
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final VoitRepository voitRepository;
+    private final VoteRepository voteRepository;
+    private final VoteService voteService;
 
 
-    public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository,
-                                VoitRepository voitRepository) {
+    public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository, VoteRepository voteRepository, VoteService voteService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.voitRepository = voitRepository;
+        this.voteRepository = voteRepository;
+        this.voteService = voteService;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -76,14 +79,17 @@ public class UserAccessController {
     }
 
     @PostMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Voit> putVoit(@RequestBody Voit voit, @AuthenticationPrincipal AuthUser authUser){
-        logger.info(authUser.getUser().getName() + " enter into putVoit");
-
-        voit.setUserId(authUser.getUser().getUserId());
-        voit.setLocalDate(LocalDate.now());
-        voit.setLocalTime(LocalTime.now());
-        voitRepository.save(voit);
-        return new ResponseEntity<>(voit, HttpStatus.CREATED);
+    public ResponseEntity<Vote> putVote(@RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser) throws VoteException {
+        logger.info(authUser.getUser().getName() + " enter into putVote");
+        return voteService.addVoit(vote, authUser);
     }
 
+
+
+    @ExceptionHandler(VoteException.class)
+    public ResponseEntity<Map<String, String>> votingException(VoteException e) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", e.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
 }

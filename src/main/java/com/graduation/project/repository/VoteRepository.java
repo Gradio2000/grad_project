@@ -1,6 +1,6 @@
 package com.graduation.project.repository;
 
-import com.graduation.project.model.Voit;
+import com.graduation.project.model.Vote;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @RepositoryRestResource(exported = false)
-public interface VoitRepository extends JpaRepository<Voit, Integer> {
+public interface VoteRepository extends JpaRepository<Vote, Integer> {
 
-    @Query("select v from Voit v where v.userId = :userId and v.localDate between :start and :finish")
-    Voit findByLocalDate(LocalDateTime start, LocalDateTime finish, int userId);
+    @Query("select v from Vote v where v.userId = :userId and v.localDateTime between :start and :finish")
+    Vote findByLocalDate(LocalDateTime start, LocalDateTime finish, int userId);
 
     @Modifying
-    @Query("update Voit v set v.localDate = :localDateTime, v.restId = :restId where v.voitId = :voitId")
+    @Query("update Vote v set v.localDateTime = :localDateTime, v.restId = :restId where v.voitId = :voitId")
     @Transactional
     void update(int voitId, LocalDateTime localDateTime, int restId);
 }

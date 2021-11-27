@@ -3,7 +3,7 @@ package com.graduation.project.controller;
 import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.RestaurantRepository;
 import com.graduation.project.repository.UserRepository;
-import com.graduation.project.repository.VoitRepository;
+import com.graduation.project.repository.VoteRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class UserControllerTest {
     UserAccessController userController;
 
     @MockBean
-    VoitRepository voitRepository;
+    VoteRepository voteRepository;
 
     @MockBean
     AnyAccessController anyAccessController;

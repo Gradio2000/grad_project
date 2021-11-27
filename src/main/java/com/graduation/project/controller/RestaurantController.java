@@ -121,7 +121,6 @@ public class RestaurantController {
                                                         @RequestParam (defaultValue = "20") Integer size){
         logger.info(authUser.getUser().getName() + " enter into getAllRest");
 
-
         Page<Restaurant> restaurantPage = restaurantRepository.findAll(PageRequest.of(page, size));
         PagedModel<EntityModel<Restaurant>> pagedModel =
                 pagedResourcesAssembler.toModel(restaurantPage, ASSEMBLER_RESTAURANT);
