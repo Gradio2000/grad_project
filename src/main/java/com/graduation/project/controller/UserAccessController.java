@@ -3,7 +3,6 @@ package com.graduation.project.controller;
 import com.graduation.project.model.User;
 import com.graduation.project.model.Vote;
 import com.graduation.project.repository.UserRepository;
-import com.graduation.project.repository.VoteRepository;
 import com.graduation.project.service.VoteService;
 import com.graduation.project.util.AuthUser;
 import com.graduation.project.util.VoteException;
@@ -32,14 +31,12 @@ public class UserAccessController {
     final Logger logger = LoggerFactory.getLogger(UserAccessController.class);
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final VoteRepository voteRepository;
     private final VoteService voteService;
 
 
-    public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository, VoteRepository voteRepository, VoteService voteService) {
+    public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository, VoteService voteService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.voteRepository = voteRepository;
         this.voteService = voteService;
     }
 
@@ -81,7 +78,7 @@ public class UserAccessController {
     @PostMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> putVote(@RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser) throws VoteException {
         logger.info(authUser.getUser().getName() + " enter into putVote");
-        return voteService.addVoit(vote, authUser);
+        return voteService.addVote(vote, authUser);
     }
 
 

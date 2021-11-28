@@ -43,7 +43,6 @@ public class AnyAccessController {
                 public EntityModel<User> toModel(User user) {
                     return EntityModel.of(user, linkTo(AdminAccessController.class).slash("users/" + user.getUserId()).withSelfRel());
                 }
-
             };
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
