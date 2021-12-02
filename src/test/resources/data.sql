@@ -10,19 +10,19 @@ insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
 values (3, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (4, 'sss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (4, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (5, 's@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (5, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (6, 'ssa@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (6, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (7, 'ssff@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (7, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (8, 'ssgg@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (8, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 -- create table USER_ROLE(ROLE_ID integer, ROLE varchar, USER_ID integer);
 

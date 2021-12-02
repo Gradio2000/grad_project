@@ -23,9 +23,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -119,7 +117,7 @@ public class RestaurantController {
     public ResponseEntity<PagedModel<EntityModel<Restaurant>>> getAllRest(@AuthenticationPrincipal AuthUser authUser,
                                                         @RequestParam (defaultValue = "0") Integer page,
                                                         @RequestParam (defaultValue = "20") Integer size){
-        logger.info(authUser.getUser().getName() + " enter into getAllRest");
+//        logger.info(authUser.getUser().getName() + " enter into getAllRest");
 
         Page<Restaurant> restaurantPage = restaurantRepository.findAll(PageRequest.of(page, size));
         PagedModel<EntityModel<Restaurant>> pagedModel =
@@ -148,11 +146,5 @@ public class RestaurantController {
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(oldRestaurant), HttpStatus.OK);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<Map<String, String>> restaurantPatchingException() {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("error", "Restaurant is not found on DB");
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
+
 }

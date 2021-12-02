@@ -1,5 +1,6 @@
 package com.graduation.project.controller;
 
+import com.graduation.project.ProjectApplication;
 import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.RestaurantRepository;
 import com.graduation.project.repository.UserRepository;
@@ -8,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,9 +20,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest
+@SpringBootTest(classes = ProjectApplication.class)
+//@WebMvcTest
 @AutoConfigureMockMvc
-//@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN"})
+@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN"})
 class RestaurantControllerTest {
 
     @MockBean
@@ -49,7 +51,7 @@ class RestaurantControllerTest {
     private final String URL = "/api/admin/restaurants";
 
     @Test
-    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetail")
+//    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetail")
     void getAllRest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
                 .andExpect(MockMvcResultMatchers.status().isOk())

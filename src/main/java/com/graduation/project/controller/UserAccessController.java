@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,11 +77,10 @@ public class UserAccessController {
     }
 
     @PostMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> putVote(@RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser) throws VoteException {
+    public ResponseEntity<Vote> addVote(@RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser) throws VoteException {
         logger.info(authUser.getUser().getName() + " enter into putVote");
         return voteService.addVote(vote, authUser);
     }
-
 
 
     @ExceptionHandler(VoteException.class)
@@ -89,4 +89,5 @@ public class UserAccessController {
         errors.put("message", e.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
 }

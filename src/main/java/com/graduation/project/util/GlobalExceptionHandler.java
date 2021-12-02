@@ -31,4 +31,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         errors.put(ex.getConstraintName(), ex.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Map<String, String>> restaurantPatchingException() {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Restaurant is not found on DB");
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
 }
