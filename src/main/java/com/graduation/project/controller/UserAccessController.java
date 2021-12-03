@@ -18,7 +18,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,9 +58,9 @@ public class UserAccessController {
         if (user.getEmail() != null){
             oldUser.setEmail(user.getEmail());
         }
-        if (user.getPassword() != null){
-            oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
+//        if (user.getPassword() != null){
+//            oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
+//        }
         if (user.getName() != null){
             oldUser.setName(user.getName());
         }
