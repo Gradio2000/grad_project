@@ -1,54 +1,54 @@
 
 -- create table USERS (USER_ID integer, EMAIL varchar, NAME varchar, PASSWORD varchar);
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
- values (2, 'bb@bbb.bb', 'admin', '$2a$12$4d3duXAHmFcFs64ZABGyk.JChVZSZm4IHfaTU4/H1WXw.TIGaS9vO');
+ values (12, 'bbw@bbb.bb', 'admin', '$2a$12$4d3duXAHmFcFs64ZABGyk.JChVZSZm4IHfaTU4/H1WXw.TIGaS9vO');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (1, 'aa@aa.aa', 'user', '$2a$12$Gj25UuBhqDPz8kpbqv5tS.SHKb9JpcDKY4Pb6KcJnyTW6YX5xDlUK');
+values (11, 'aaw@aa.aa', 'user1', '$2a$12$Gj25UuBhqDPz8kpbqv5tS.SHKb9JpcDKY4Pb6KcJnyTW6YX5xDlUK');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (3, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (13, 'ssw@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (4, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (14, 'sssw@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (5, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (15, 'sw@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (6, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (16, 'ssaw@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (7, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (17, 'ssffw@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
-values (8, 'ss@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
+values (18, 'ssggw@ss.ss', 'new', '$2a$12$re/O6NYrYuTH38VJ8gIYteSaGomSlmcFwqvyu28V5q0EHhZl9RMUe');
 
 -- create table USER_ROLE(ROLE_ID integer, ROLE varchar, USER_ID integer);
 
 insert into USER_ROLE (ROLE, USER_ID)
-values ('USER', 1);
+values ('USER', 11);
 
 insert into USER_ROLE (ROLE, USER_ID)
-values ('USER', 2);
+values ('USER', 12);
 
 insert into USER_ROLE (ROLE, USER_ID)
-values ('ADMIN', 2);
+values ('ADMIN', 12);
 
 insert into USER_ROLE (ROLE, USER_ID)
-values ('USER', 3);
+values ('USER', 13);
 
 
 insert into RESTAURANT (REST_ID, NAME)
-values (1, 'aaaaaa' );
+values (11, 'aaaaaa' );
 insert into RESTAURANT (REST_ID, NAME)
-values (2, 'bbbbbbbb' );
+values (12, 'bbbbbbbb' );
 insert into RESTAURANT (REST_ID, NAME)
-values (3, 'cccccccc' );
+values (13, 'cccccccc' );
 
 
 insert into DISH (DISH_ID, DATE, DISH, PRICE, REST_ID)
-values (1, now(), 'Каша', '12.53', 1 );
+values (11, now(), 'Каша', '12.53', 11 );
 
 -- insert into VOIT(DATE, TIME, REST_ID, USER_ID)
 -- values ( now(), now(), 1, 1 );

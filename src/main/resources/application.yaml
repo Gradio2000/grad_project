@@ -31,9 +31,14 @@ logging:
     root: WARN
     com.graduation.project: DEBUG
 
+
     org:
       springframework:
-        security=INFO:
+        security=debug:
+
+          org:
+            hibernate:
+              SQL=debug:
 
 server.servlet:
   encoding:

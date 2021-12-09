@@ -27,6 +27,11 @@ public class Restaurant {
     @JsonIgnore
     private List<Dish> dishList;
 
+    public Restaurant(int restId, String name) {
+        this.restId = restId;
+        this.name = name;
+    }
+
     public int getRestId() {
         return restId;
     }

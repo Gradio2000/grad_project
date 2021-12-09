@@ -1,7 +1,7 @@
 package com.graduation.project.controller;
 
-import com.graduation.project.model.Role;
 import com.graduation.project.model.User;
+import com.graduation.project.model.to.UserTO;
 import com.graduation.project.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.EntityModel;
@@ -17,7 +17,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,14 +27,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Tag(name = "Anybody access controller")
 public class AnyAccessController {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AnyAccessController(PasswordEncoder passwordEncoder, UserService userService) {
-        this.passwordEncoder = passwordEncoder;
+    public AnyAccessController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
-
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
             new RepresentationModelAssemblerSupport<>(AnyAccessController.class, (Class<EntityModel<User>>) (Class<?>) EntityModel.class) {
@@ -45,16 +43,27 @@ public class AnyAccessController {
                 }
             };
 
+//    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody User user) {
+//        user.setRoles(EnumSet.of(Role.USER));
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setEmail(user.getEmail().toLowerCase());
+//        User created = userService.save(user);
+//        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                .path("/api/admin/users/{id}")
+//                .buildAndExpand(created.getUserId()).toUri();
+//        return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(user));
+//    }
+
+
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody User user) {
-        user.setRoles(EnumSet.of(Role.USER));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setEmail(user.getEmail().toLowerCase());
-        User created = userService.save(user);
+    public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody UserTO userTO) {
+        userTO.setPassword(passwordEncoder.encode(userTO.getPassword()));
+        User createdUser = userService.save(userTO.getUser());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/admin/users/{id}")
-                .buildAndExpand(created.getUserId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(user));
+                .buildAndExpand(createdUser.getUserId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(createdUser));
     }
 
 
