@@ -2,6 +2,7 @@ package com.graduation.project.controller;
 
 import com.graduation.project.model.User;
 import com.graduation.project.model.Vote;
+import com.graduation.project.model.to.UserToWithoutPassword;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.service.VoteService;
 import com.graduation.project.util.AuthUser;
@@ -15,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,13 +29,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Tag(name = "User access controller")
 public class UserAccessController {
     final Logger logger = LoggerFactory.getLogger(UserAccessController.class);
-    private final PasswordEncoder passwordEncoder;
+
     private final UserRepository userRepository;
     private final VoteService voteService;
 
 
-    public UserAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository, VoteService voteService) {
-        this.passwordEncoder = passwordEncoder;
+    public UserAccessController(UserRepository userRepository, VoteService voteService) {
         this.userRepository = userRepository;
         this.voteService = voteService;
     }
@@ -50,19 +49,17 @@ public class UserAccessController {
 
 
     @PutMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<User>> changeUser(@RequestBody User user,
+    public ResponseEntity<EntityModel<User>> changeUser(@RequestBody UserToWithoutPassword userTO,
                                                         @AuthenticationPrincipal AuthUser authUser){
         logger.info(authUser.getUser().getName() + " enter into changeUser");
 
         User oldUser = authUser.getUser();
-        if (user.getEmail() != null){
-            oldUser.setEmail(user.getEmail());
+        if (userTO.getEmail() != null){
+            oldUser.setEmail(userTO.getEmail());
         }
-//        if (user.getPassword() != null){
-//            oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
-//        }
-        if (user.getName() != null){
-            oldUser.setName(user.getName());
+
+        if (userTO.getName() != null){
+            oldUser.setName(userTO.getName());
         }
        return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.save(oldUser)), HttpStatus.OK) ;
     }
@@ -88,5 +85,6 @@ public class UserAccessController {
         errors.put("message", e.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
 
 }

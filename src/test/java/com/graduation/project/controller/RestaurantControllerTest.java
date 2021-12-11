@@ -65,7 +65,6 @@ class RestaurantControllerTest {
         userRepository.save(new User(100, "aaawww", "asasa@qq.qq", "asasa"));
         repository.save(new Restaurant(100, "aaa"));
 
-
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());

@@ -8,6 +8,7 @@ import com.graduation.project.util.AuthUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -85,6 +86,10 @@ public class RestaurantController {
     public ResponseEntity<CollectionModel<EntityModel<Dish>>> getAllDishByRestId(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
         logger.info(authUser.getUser().getName() + " enter into getAllDishByRestId");
 
+        if (restaurantRepository.findById(id).isEmpty()){
+            throw new EmptyResultDataAccessException(1);
+        }
+
         List<EntityModel<Dish>> entityModels = dishRepository.findAllByRestId(id).stream()
                 .map(ASSEMBLER_DISH::toModel)
                 .collect(Collectors.toList());
@@ -98,6 +103,10 @@ public class RestaurantController {
                                                                                   @RequestBody List<Dish> dishList,
                                                                                   @AuthenticationPrincipal AuthUser authUser){
         logger.info(authUser.getUser().getName() + " enter into addDishListByRestId");
+
+        if (restaurantRepository.findById(id).isEmpty()){
+            throw new EmptyResultDataAccessException(1);
+        }
 
         dishList.forEach(dish1 -> {
             dish1.setRestId(id);

@@ -59,7 +59,7 @@ public class AnyAccessController {
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody UserTO userTO) {
         userTO.setPassword(passwordEncoder.encode(userTO.getPassword()));
-        User createdUser = userService.save(userTO.getUser());
+        User createdUser = userService.save(userTO.getUser(userTO));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/admin/users/{id}")
                 .buildAndExpand(createdUser.getUserId()).toUri();

@@ -32,6 +32,9 @@ public class Restaurant {
         this.name = name;
     }
 
+    public Restaurant() {
+    }
+
     public int getRestId() {
         return restId;
     }

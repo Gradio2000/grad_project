@@ -31,6 +31,7 @@ public class UserTO {
         this.password = password;
     }
 
+
     public String getName() {
         return name;
     }
@@ -55,7 +56,7 @@ public class UserTO {
         this.password = password;
     }
 
-    public User getUser(){
+    public User getUser(UserTO userTO){
         return new User(name, email.toLowerCase(), password, EnumSet.of(Role.USER));
     }
 }
