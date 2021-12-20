@@ -6,6 +6,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "restaurant")
@@ -29,6 +30,10 @@ public class Restaurant {
 
     public Restaurant(int restId, String name) {
         this.restId = restId;
+        this.name = name;
+    }
+
+    public Restaurant(String name) {
         this.name = name;
     }
 
@@ -57,5 +62,18 @@ public class Restaurant {
 
     public void setDishList(List<Dish> dishList) {
         this.dishList = dishList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Restaurant that = (Restaurant) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

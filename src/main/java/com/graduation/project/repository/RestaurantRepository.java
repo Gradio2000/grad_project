@@ -16,4 +16,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @Override
     Page<Restaurant> findAll(Pageable pageable);
+
+    Restaurant findByName(String name);
 }

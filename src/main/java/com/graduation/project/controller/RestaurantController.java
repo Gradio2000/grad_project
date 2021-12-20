@@ -68,8 +68,9 @@ public class RestaurantController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<Restaurant>> addRest(@RequestBody Restaurant restaurant,
                                                            @AuthenticationPrincipal AuthUser authUser){
-        logger.info(authUser.getUser().getName() + " enter into addRest");
-
+        if (authUser != null) {
+            logger.info(authUser.getUser().getName() + " enter into addRest");
+        }
         restaurantRepository.save(restaurant);
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.CREATED);
     }
@@ -141,17 +142,21 @@ public class RestaurantController {
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpStatus deleteRest(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
-        logger.info(authUser.getUser().getName() + " enter into deleteRest");
+        if (authUser != null) {
+            logger.info(authUser.getUser().getName() + " enter into deleteRest");
+        }
 
         restaurantRepository.deleteById(id);
-        return HttpStatus.NO_CONTENT;
+        return HttpStatus.OK;
     }
 
     @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<Restaurant>> patchRestById(@PathVariable Integer id,
                                                                  @RequestBody Restaurant newRestaurant,
                                                                  @AuthenticationPrincipal AuthUser authUser){
-        logger.info(authUser.getUser().getName() + " enter into patchRestById");
+        if (authUser != null) {
+            logger.info(authUser.getUser().getName() + " enter into patchRestById");
+        }
 
         Restaurant oldRestaurant = restaurantRepository.getById(id);
         oldRestaurant.setName(newRestaurant.getName());
