@@ -76,16 +76,18 @@ public class RestaurantController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<Restaurant>> getRestById(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
-        logger.info(authUser.getUser().getName() + " enter into getRestById");
-
+        if (authUser != null) {
+            logger.info(authUser.getUser().getName() + " enter into getRestById");
+        }
         Restaurant restaurant = restaurantRepository.getById(id);
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/dishList", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Dish>>> getAllDishByRestId(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
-        logger.info(authUser.getUser().getName() + " enter into getAllDishByRestId");
-
+        if (authUser != null) {
+            logger.info(authUser.getUser().getName() + " enter into getAllDishByRestId");
+        }
         if (restaurantRepository.findById(id).isEmpty()){
             throw new EmptyResultDataAccessException(1);
         }
@@ -126,9 +128,10 @@ public class RestaurantController {
     public ResponseEntity<PagedModel<EntityModel<Restaurant>>> getAllRest(@AuthenticationPrincipal AuthUser authUser,
                                                         @RequestParam (defaultValue = "0") Integer page,
                                                         @RequestParam (defaultValue = "20") Integer size){
-//        logger.info(authUser.getUser().getName() + " enter into getAllRest");
+        if (authUser != null) {
+            logger.info(authUser.getUser().getName() + " enter into getAllRest");
+        }
 
-        List<Restaurant> restaurantList = restaurantRepository.findAll();
         Page<Restaurant> restaurantPage = restaurantRepository.findAll(PageRequest.of(page, size));
         PagedModel<EntityModel<Restaurant>> pagedModel =
                 pagedResourcesAssembler.toModel(restaurantPage, ASSEMBLER_RESTAURANT);
