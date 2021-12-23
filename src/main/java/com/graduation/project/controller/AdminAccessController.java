@@ -44,7 +44,10 @@ public class AdminAccessController {
 
     @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<User>>> getAllUsers(@AuthenticationPrincipal AuthUser authUser){
-        logger.info(authUser.getUser().getName() + " enter into getAllUsers");
+        if (authUser != null) {
+            logger.info(authUser.getUser().getName() + " enter into getAllUsers");
+        }
+
         List<EntityModel<User>> entityModels = userRepository.findAll().stream()
                 .map(ASSEMBLER::toModel)
                 .collect(Collectors.toList());
@@ -57,7 +60,10 @@ public class AdminAccessController {
     @GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> getUserById(@PathVariable Integer id,
                                                          @AuthenticationPrincipal AuthUser authUser){
-        logger.info(authUser.getUser().getName() + " enter into getUserById");
+        if (authUser != null) {
+            logger.info(authUser.getUser().getName() + " enter into getUserById");
+        }
+
         return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.getById(id)), HttpStatus.OK);
     }
 

@@ -43,18 +43,6 @@ public class AnyAccessController {
                 }
             };
 
-//    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody User user) {
-//        user.setRoles(EnumSet.of(Role.USER));
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        user.setEmail(user.getEmail().toLowerCase());
-//        User created = userService.save(user);
-//        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/api/admin/users/{id}")
-//                .buildAndExpand(created.getUserId()).toUri();
-//        return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(user));
-//    }
-
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody UserTO userTO) {

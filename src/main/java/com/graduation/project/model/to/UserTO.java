@@ -1,6 +1,5 @@
 package com.graduation.project.model.to;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.graduation.project.model.Role;
 import com.graduation.project.model.User;
 
@@ -19,7 +18,7 @@ public class UserTO {
     @Size(max = 128, message = "size is too much")
     private String email;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(max = 256, message = "size is too much")
     @NotEmpty(message = "password mustn't be empty")
     private String password;
@@ -59,4 +58,6 @@ public class UserTO {
     public User getUser(UserTO userTO){
         return new User(name, email.toLowerCase(), password, EnumSet.of(Role.USER));
     }
+
+
 }
