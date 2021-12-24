@@ -3,13 +3,16 @@ package com.graduation.project.controller;
 import com.graduation.project.model.User;
 import com.graduation.project.model.Vote;
 import com.graduation.project.model.to.UserToWithoutPassword;
+import com.graduation.project.model.to.VoteTO;
 import com.graduation.project.repository.UserRepository;
+import com.graduation.project.repository.VoteRepository;
 import com.graduation.project.service.VoteService;
 import com.graduation.project.util.AuthUser;
 import com.graduation.project.util.VoteException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
@@ -19,7 +22,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -32,11 +37,12 @@ public class UserAccessController {
 
     private final UserRepository userRepository;
     private final VoteService voteService;
+    private final VoteRepository voteRepository;
 
-
-    public UserAccessController(UserRepository userRepository, VoteService voteService) {
+    public UserAccessController(UserRepository userRepository, VoteService voteService, VoteRepository voteRepository) {
         this.userRepository = userRepository;
         this.voteService = voteService;
+        this.voteRepository = voteRepository;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -78,6 +84,22 @@ public class UserAccessController {
         return voteService.addVote(vote, authUser);
     }
 
+    @GetMapping(value = "/voits", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CollectionModel<VoteTO> getAllVotes(@AuthenticationPrincipal AuthUser authUser,
+                                                          @RequestParam (defaultValue = "0") Integer page,
+                                                          @RequestParam (defaultValue = "20") Integer size){
+        if (authUser != null){
+            logger.info(authUser.getUser().getName() + " enter into getAllVotes");
+        }
+
+        assert authUser != null;
+        List<VoteTO> voteTOList = voteRepository.findAllByUserId(authUser.getUser().getUserId()).stream()
+                .map(vote -> new VoteTO(vote.getRestId(), vote.getLocalDateTime().toLocalDate(), vote.getLocalDateTime().toLocalTime()))
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(voteTOList);
+    }
+
 
     @ExceptionHandler(VoteException.class)
     public ResponseEntity<Map<String, String>> votingException(VoteException e) {
@@ -85,6 +107,5 @@ public class UserAccessController {
         errors.put("message", e.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-
 
 }

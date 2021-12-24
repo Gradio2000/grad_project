@@ -8,6 +8,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RepositoryRestResource(exported = false)
 public interface VoteRepository extends JpaRepository<Vote, Integer> {
@@ -19,4 +20,6 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Query("update Vote v set v.localDateTime = :localDateTime, v.restId = :restId where v.voitId = :voitId")
     @Transactional
     void update(int voitId, LocalDateTime localDateTime, int restId);
+
+    List<Vote> findAllByUserId(int userId);
 }

@@ -34,7 +34,7 @@ public class AdminAccessController {
         this.userRepository = userRepository;
     }
 
-    private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
+    private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER_USER =
             new RepresentationModelAssemblerSupport<>(AdminAccessController.class, (Class<EntityModel<User>>) (Class<?>) EntityModel.class) {
                 @Override
                 public EntityModel<User> toModel(User user) {
@@ -49,7 +49,7 @@ public class AdminAccessController {
         }
 
         List<EntityModel<User>> entityModels = userRepository.findAll().stream()
-                .map(ASSEMBLER::toModel)
+                .map(ASSEMBLER_USER::toModel)
                 .collect(Collectors.toList());
 
         Link link = linkTo(UserAccessController.class).withSelfRel();
@@ -64,7 +64,7 @@ public class AdminAccessController {
             logger.info(authUser.getUser().getName() + " enter into getUserById");
         }
 
-        return new ResponseEntity<>(ASSEMBLER.toModel(userRepository.getById(id)), HttpStatus.OK);
+        return new ResponseEntity<>(ASSEMBLER_USER.toModel(userRepository.getById(id)), HttpStatus.OK);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
