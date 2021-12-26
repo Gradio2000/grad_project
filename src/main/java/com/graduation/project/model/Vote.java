@@ -6,7 +6,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "voit")
+@Table(name = "voit", indexes = {
+        @Index(name = "idx_vote_user_id", columnList = "user_id"),
+        @Index(name = "idx_vote_date_time", columnList = "date_time")
+})
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

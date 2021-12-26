@@ -3,10 +3,13 @@ package com.graduation.project.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dish")
+@Table(name = "dish", indexes = {
+        @Index(name = "idx_dish_dish_id", columnList = "dish_id")
+})
 public class Dish {
 
     @Id
@@ -23,6 +26,7 @@ public class Dish {
     private String dish;
 
     @Column(name = "price")
+    @DecimalMin(value = "0.01", message = "Цена блюда д.б. в диапазоне от 0.01")
     private double price;
 
     @JsonIgnore

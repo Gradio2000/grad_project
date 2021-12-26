@@ -11,8 +11,12 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
-@Table(name = "users",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"email"}, name = "user_email_unique")})
+@Table(name = "users", indexes = {
+        @Index(name = "idx_user_name", columnList = "name"),
+        @Index(name = "idx_user_user_id", columnList = "user_id")
+}, uniqueConstraints = {
+        @UniqueConstraint(name = "user_email_unique", columnNames = {"email"})
+})
 public class User {
     @Id
     @Column(name = "user_id")

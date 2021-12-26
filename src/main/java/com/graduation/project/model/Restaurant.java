@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "restaurant")
+@Table(name = "restaurant", indexes = {
+        @Index(name = "idx_restaurant_rest_id", columnList = "rest_id"),
+        @Index(name = "idx_restaurant_name", columnList = "name")
+})
 public class Restaurant {
     @Id
     @Column(name = "rest_id")
