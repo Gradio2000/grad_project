@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,13 +104,15 @@ public class RestaurantController {
 
     @PostMapping(value = "/{id}/dishList", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Dish>>> addDishListByRestId(@PathVariable Integer id,
-                                                                                  @RequestBody List<Dish> dishList,
+                                                                                  @Valid @RequestBody List<Dish> dishList,
                                                                                   @AuthenticationPrincipal AuthUser authUser){
+
         logger.info(authUser.getUser().getName() + " enter into addDishListByRestId");
 
         if (restaurantRepository.findById(id).isEmpty()){
             throw new EmptyResultDataAccessException(1);
         }
+
 
         dishList.forEach(dish1 -> {
             dish1.setRestId(id);

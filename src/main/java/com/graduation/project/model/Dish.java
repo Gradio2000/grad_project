@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -26,8 +28,9 @@ public class Dish {
     private String dish;
 
     @Column(name = "price")
-    @DecimalMin(value = "0.01", message = "Цена блюда д.б. в диапазоне от 0.01")
-    private double price;
+    @DecimalMin(value = "0.01", message = "Некорректное число")
+    @Digits(integer = 6, fraction = 2, message = "Некорректное число")
+    private BigDecimal price;
 
     @JsonIgnore
     @Column(name = "rest_id")
@@ -57,11 +60,11 @@ public class Dish {
         this.dish = dish;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
