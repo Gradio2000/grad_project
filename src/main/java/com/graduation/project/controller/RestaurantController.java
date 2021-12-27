@@ -23,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,7 +103,7 @@ public class RestaurantController {
 
     @PostMapping(value = "/{id}/dishList", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Dish>>> addDishListByRestId(@PathVariable Integer id,
-                                                                                  @Valid @RequestBody List<Dish> dishList,
+                                                                                  @RequestBody List<Dish> dishList,
                                                                                   @AuthenticationPrincipal AuthUser authUser){
 
         logger.info(authUser.getUser().getName() + " enter into addDishListByRestId");

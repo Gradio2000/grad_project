@@ -28,8 +28,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> userPatchingException(ConstraintViolationException ex) {
-        return new ResponseEntity<>(ex.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Map<String, String>> userPatchingException( ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
