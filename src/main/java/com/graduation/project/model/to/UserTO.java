@@ -18,7 +18,7 @@ public class UserTO {
     @Size(max = 128, message = "size is too much")
     private String email;
 
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+
     @Size(max = 256, message = "size is too much")
     @NotEmpty(message = "password mustn't be empty")
     private String password;

@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Service
@@ -31,32 +30,15 @@ public class VoteService {
             throw new EmptyResultDataAccessException("My message", 100);
         }
 
-        // checking if the user voted today?
-        LocalDateTime dateStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0));
-        LocalDateTime dateFinish = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59));
-        LocalTime localTime = LocalTime.of(11, 0);
 
-        Vote voteFromDB = voteRepository.findByLocalDate(dateStart, dateFinish, authUser.getUser().getUserId());
-
-        // if not voted, then...
-        if (voteFromDB == null){
-            vote.setUserId(authUser.getUser().getUserId());
-            vote.setLocalDateTime(LocalDateTime.now());
-            voteRepository.save(vote);
-            return new ResponseEntity<>(vote, HttpStatus.CREATED);
+        LocalTime time = LocalTime.of(11, 0);
+        if (vote.getLocalTime().isBefore(time)){
+            vote.setLocalDate(LocalDate.now());
+            vote.setLocalTime(LocalTime.now());
+            return new ResponseEntity<>(voteRepository.save(vote), HttpStatus.OK);
         }
+        else throw new VoteException();
 
-        // if user have already voted before 11.00, then we change the vote
-        if (voteFromDB.getLocalDateTime().toLocalTime().isBefore(localTime)){
-            LocalDateTime localDateTime = LocalDateTime.now();
-            int voitId = voteFromDB.getVoitId();
-            int restId = vote.getRestId();
-            voteRepository.update(voitId, localDateTime, restId);
-            return new ResponseEntity<>(vote, HttpStatus.OK);
-        }
-
-        // if user have already voted after 11.00, throw new VoteException
-        throw new VoteException();
     }
 }
 

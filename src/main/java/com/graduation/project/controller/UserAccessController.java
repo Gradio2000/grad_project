@@ -21,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,11 +80,47 @@ public class UserAccessController {
         return new ResponseEntity<>(ASSEMBLER.toModel(authUser.getUser()), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> addVote(@RequestBody Vote vote, @AuthenticationPrincipal AuthUser authUser) throws VoteException {
-        logger.info(authUser.getUser().getName() + " enter into putVote");
-        return voteService.addVote(vote, authUser);
+//    @PostMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Vote> addVote(@RequestBody Vote vote,
+//                                        @AuthenticationPrincipal AuthUser authUser) throws VoteException {
+//
+//        logger.info(authUser.getUser().getName() + " enter into putVote");
+//
+//        vote.setUserId(authUser.getUser().getUserId());
+//        vote.setLocalDate(LocalDate.now());
+//        vote.setLocalTime(LocalTime.now());
+//        try {
+//            return new ResponseEntity<>(voteRepository.save(vote), HttpStatus.OK);
+//        } catch (Exception e) {
+//           throw new VoteException();
+//        }
+//    }
+
+    @PutMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Vote> changeVote(@RequestBody Vote vote,
+                                           @AuthenticationPrincipal AuthUser authUser) throws VoteException {
+
+        logger.info(authUser.getUser().getName() + " enter into changeVote");
+
+        Vote voteFromDB = voteRepository.getByUserIdAndDate(authUser.getUser().getUserId(), LocalDate.now());
+
+        if (voteFromDB != null){
+            voteFromDB.setRestId(vote.getRestId());
+            return voteService.addVote(voteFromDB, authUser);
+        }
+        else {
+            vote.setUserId(authUser.getUser().getUserId());
+            vote.setLocalDate(LocalDate.now());
+            vote.setLocalTime(LocalTime.now());
+            try {
+                return new ResponseEntity<>(voteRepository.save(vote), HttpStatus.OK);
+            } catch (Exception e) {
+                throw new VoteException();
+            }
+        }
+
     }
+
 
     @GetMapping(value = "/voits", produces = MediaType.APPLICATION_JSON_VALUE)
     public CollectionModel<VoteTO> getAllVotes(@AuthenticationPrincipal AuthUser authUser,
@@ -94,7 +132,7 @@ public class UserAccessController {
 
         assert authUser != null;
         List<VoteTO> voteTOList = voteRepository.findAllByUserId(authUser.getUser().getUserId()).stream()
-                .map(vote -> new VoteTO(vote.getRestId(), vote.getLocalDateTime().toLocalDate(), vote.getLocalDateTime().toLocalTime()))
+                .map(vote -> new VoteTO(vote.getRestId(), vote.getLocalDate(), vote.getLocalTime()))
                 .collect(Collectors.toList());
 
         return CollectionModel.of(voteTOList);
