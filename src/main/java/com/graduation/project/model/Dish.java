@@ -14,6 +14,7 @@ import java.time.LocalDate;
 })
 public class Dish {
 
+
     @Id
     @Column(name = "dish_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
