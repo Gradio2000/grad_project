@@ -2,6 +2,7 @@ package com.graduation.project.util;
 
 
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

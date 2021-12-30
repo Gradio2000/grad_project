@@ -3,13 +3,14 @@ package com.graduation.project.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
-@Table(name = "voit", indexes = {
-        @Index(name = "idx_vote_user_id", columnList = "user_id"),
-        @Index(name = "idx_vote_date_time", columnList = "date_time")
-})
+@Table(name = "voit",
+        indexes = {@Index(name = "idx_vote_user_id", columnList = "user_id")},
+        uniqueConstraints = { @UniqueConstraint(columnNames = { "date", "user_id" })}
+        )
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +25,13 @@ public class Vote {
     @Column(name = "rest_id")
     private int restId;
 
-    @Column(name = "date_time")
+    @Column(name = "date")
     @JsonIgnore
-    private LocalDateTime localDateTime;
+    private LocalDate localDate;
+
+    @Column(name = "time")
+    @JsonIgnore
+    private LocalTime localTime;
 
 
     public Vote(int userId, int restId) {
@@ -61,11 +66,19 @@ public class Vote {
         this.restId = restId;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public LocalDate getLocalDate() {
+        return localDate;
     }
 
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
     }
 }

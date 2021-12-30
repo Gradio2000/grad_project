@@ -56,7 +56,10 @@ values (2, now(), 'Суп', '5.60', 1 );
 insert into DISH (DISH_ID, DATE, DISH, PRICE, REST_ID)
 values (3, now(), 'Шашлык', '15.90', 1 );
 
-insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-23 15:34:35.662860', 1, 2 );
-insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-22 15:34:35.662860', 2, 2 );
-insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-21 15:34:35.662860', 1, 2 );
-insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-20 15:34:35.662860', 1, 1 );
+-- insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-23 15:34:35.662860', 1, 2 );
+-- insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-22 15:34:35.662860', 2, 2 );
+-- insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-21 15:34:35.662860', 1, 2 );
+-- insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-20 15:34:35.662860', 1, 1 );
+
+insert into VOIT(date, time, rest_id, user_id) VALUES ( '2021-12-23', '15:34:35.662860', 1, 2 );
+insert into VOIT(date, time, rest_id, user_id) VALUES ( '2021-12-30', '10:34:35.662860', 1, 2 );
