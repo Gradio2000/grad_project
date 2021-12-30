@@ -80,21 +80,6 @@ public class UserAccessController {
         return new ResponseEntity<>(ASSEMBLER.toModel(authUser.getUser()), HttpStatus.OK);
     }
 
-//    @PostMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Vote> addVote(@RequestBody Vote vote,
-//                                        @AuthenticationPrincipal AuthUser authUser) throws VoteException {
-//
-//        logger.info(authUser.getUser().getName() + " enter into putVote");
-//
-//        vote.setUserId(authUser.getUser().getUserId());
-//        vote.setLocalDate(LocalDate.now());
-//        vote.setLocalTime(LocalTime.now());
-//        try {
-//            return new ResponseEntity<>(voteRepository.save(vote), HttpStatus.OK);
-//        } catch (Exception e) {
-//           throw new VoteException();
-//        }
-//    }
 
     @PutMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> changeVote(@RequestBody Vote vote,
