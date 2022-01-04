@@ -12,6 +12,8 @@ import com.graduation.project.util.VoteException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -81,6 +83,7 @@ public class UserAccessController {
     }
 
 
+    @CacheEvict("voits")
     @PutMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> changeVote(@RequestBody Vote vote,
                                            @AuthenticationPrincipal AuthUser authUser) throws VoteException {
@@ -107,6 +110,7 @@ public class UserAccessController {
     }
 
 
+    @Cacheable("voits")
     @GetMapping(value = "/voits", produces = MediaType.APPLICATION_JSON_VALUE)
     public CollectionModel<VoteTO> getAllVotes(@AuthenticationPrincipal AuthUser authUser,
                                                           @RequestParam (defaultValue = "0") Integer page,
