@@ -5,6 +5,7 @@ import com.graduation.project.repository.RestaurantRepository;
 import com.graduation.project.repository.VoteRepository;
 import com.graduation.project.util.AuthUser;
 import com.graduation.project.util.VoteException;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class VoteService {
     }
 
     //insert vote into db
+    @CacheEvict("voits")
     public ResponseEntity<Vote> addVote(Vote vote, AuthUser authUser) throws VoteException {
         // check exist restaurant in DB
         if (!restaurantRepository.existsById(vote.getRestId())){

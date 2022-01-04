@@ -1,7 +1,6 @@
 package com.graduation.project;
 
 import com.graduation.project.model.to.UserTO;
-import com.graduation.project.repository.UserRepository;
 import com.graduation.project.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ public class UserControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     @WithUserDetails("admin")
@@ -57,7 +53,6 @@ public class UserControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userMapper))
                     .andExpect(status().isCreated());
-
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.graduation.project.controller;
 
 import com.graduation.project.model.User;
 import com.graduation.project.model.to.UserTO;
-import com.graduation.project.service.UserService;
+import com.graduation.project.repository.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -27,12 +27,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Tag(name = "Anybody access controller")
 public class AnyAccessController {
 
-    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    public AnyAccessController(UserService userService, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
+    public AnyAccessController(PasswordEncoder passwordEncoder, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -47,7 +47,7 @@ public class AnyAccessController {
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody UserTO userTO) {
         userTO.setPassword(passwordEncoder.encode(userTO.getPassword()));
-        User createdUser = userService.save(userTO.getUser(userTO));
+        User createdUser = userRepository.save(userTO.getUser(userTO));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/admin/users/{id}")
                 .buildAndExpand(createdUser.getUserId()).toUri();

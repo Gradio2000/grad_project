@@ -8,6 +8,8 @@ import com.graduation.project.util.AuthUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -66,6 +68,7 @@ public class RestaurantController {
             };
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict("rest")
     public ResponseEntity<EntityModel<Restaurant>> addRest(@RequestBody Restaurant restaurant,
                                                            @AuthenticationPrincipal AuthUser authUser){
 
@@ -126,6 +129,7 @@ public class RestaurantController {
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Cacheable("rest")
     public ResponseEntity<PagedModel<EntityModel<Restaurant>>> getAllRest(@AuthenticationPrincipal AuthUser authUser,
                                                         @RequestParam (defaultValue = "0") Integer page,
                                                         @RequestParam (defaultValue = "20") Integer size){
@@ -140,6 +144,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict("rest")
     public HttpStatus deleteRest(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
 
         logger.info(authUser.getUser().getName() + " enter into deleteRest");
@@ -149,6 +154,7 @@ public class RestaurantController {
     }
 
     @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict("rest")
     public ResponseEntity<EntityModel<Restaurant>> patchRestById(@PathVariable Integer id,
                                                                  @RequestBody Restaurant newRestaurant,
                                                                  @AuthenticationPrincipal AuthUser authUser){
