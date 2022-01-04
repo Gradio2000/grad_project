@@ -115,11 +115,9 @@ public class UserAccessController {
     public CollectionModel<VoteTO> getAllVotes(@AuthenticationPrincipal AuthUser authUser,
                                                           @RequestParam (defaultValue = "0") Integer page,
                                                           @RequestParam (defaultValue = "20") Integer size){
-        if (authUser != null){
-            logger.info(authUser.getUser().getName() + " enter into getAllVotes");
-        }
 
-        assert authUser != null;
+        logger.info(authUser.getUser().getName() + " enter into getAllVotes");
+
         List<VoteTO> voteTOList = voteRepository.findAllByUserId(authUser.getUser().getUserId()).stream()
                 .map(vote -> new VoteTO(vote.getRestId(), vote.getLocalDate(), vote.getLocalTime()))
                 .collect(Collectors.toList());

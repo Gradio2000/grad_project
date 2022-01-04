@@ -68,27 +68,25 @@ public class RestaurantController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<Restaurant>> addRest(@RequestBody Restaurant restaurant,
                                                            @AuthenticationPrincipal AuthUser authUser){
-        if (authUser != null) {
-            logger.info(authUser.getUser().getName() + " enter into addRest");
-        }
+
+        logger.info(authUser.getUser().getName() + " enter into addRest");
+
         restaurantRepository.save(restaurant);
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<Restaurant>> getRestById(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
-        if (authUser != null) {
-            logger.info(authUser.getUser().getName() + " enter into getRestById");
-        }
+        logger.info(authUser.getUser().getName() + " enter into getRestById");
+
         Restaurant restaurant = restaurantRepository.getById(id);
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/dishList", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Dish>>> getAllDishByRestId(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
-        if (authUser != null) {
-            logger.info(authUser.getUser().getName() + " enter into getAllDishByRestId");
-        }
+        logger.info(authUser.getUser().getName() + " enter into getAllDishByRestId");
+
         if (restaurantRepository.findById(id).isEmpty()){
             throw new EmptyResultDataAccessException(1);
         }
@@ -131,9 +129,8 @@ public class RestaurantController {
     public ResponseEntity<PagedModel<EntityModel<Restaurant>>> getAllRest(@AuthenticationPrincipal AuthUser authUser,
                                                         @RequestParam (defaultValue = "0") Integer page,
                                                         @RequestParam (defaultValue = "20") Integer size){
-        if (authUser != null) {
-            logger.info(authUser.getUser().getName() + " enter into getAllRest");
-        }
+
+        logger.info(authUser.getUser().getName() + " enter into getAllRest");
 
         Page<Restaurant> restaurantPage = restaurantRepository.findAll(PageRequest.of(page, size));
         PagedModel<EntityModel<Restaurant>> pagedModel =
@@ -144,9 +141,8 @@ public class RestaurantController {
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpStatus deleteRest(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
-        if (authUser != null) {
-            logger.info(authUser.getUser().getName() + " enter into deleteRest");
-        }
+
+        logger.info(authUser.getUser().getName() + " enter into deleteRest");
 
         restaurantRepository.deleteById(id);
         return HttpStatus.OK;
@@ -156,15 +152,13 @@ public class RestaurantController {
     public ResponseEntity<EntityModel<Restaurant>> patchRestById(@PathVariable Integer id,
                                                                  @RequestBody Restaurant newRestaurant,
                                                                  @AuthenticationPrincipal AuthUser authUser){
-        if (authUser != null) {
-            logger.info(authUser.getUser().getName() + " enter into patchRestById");
-        }
+
+        logger.info(authUser.getUser().getName() + " enter into patchRestById");
 
         Restaurant oldRestaurant = restaurantRepository.getById(id);
         oldRestaurant.setName(newRestaurant.getName());
         restaurantRepository.save(oldRestaurant);
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(oldRestaurant), HttpStatus.OK);
     }
-
 
 }

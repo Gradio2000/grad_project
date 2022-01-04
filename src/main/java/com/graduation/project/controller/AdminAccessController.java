@@ -44,9 +44,7 @@ public class AdminAccessController {
 
     @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<User>>> getAllUsers(@AuthenticationPrincipal AuthUser authUser){
-        if (authUser != null) {
-            logger.info(authUser.getUser().getName() + " enter into getAllUsers");
-        }
+        logger.info(authUser.getUser().getName() + " enter into getAllUsers");
 
         List<EntityModel<User>> entityModels = userRepository.findAll().stream()
                 .map(ASSEMBLER_USER::toModel)
@@ -60,9 +58,8 @@ public class AdminAccessController {
     @GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> getUserById(@PathVariable Integer id,
                                                          @AuthenticationPrincipal AuthUser authUser){
-        if (authUser != null) {
-            logger.info(authUser.getUser().getName() + " enter into getUserById");
-        }
+
+        logger.info(authUser.getUser().getName() + " enter into getUserById");
 
         return new ResponseEntity<>(ASSEMBLER_USER.toModel(userRepository.getById(id)), HttpStatus.OK);
     }
@@ -74,6 +71,5 @@ public class AdminAccessController {
         errors.put("error", "User is not found on DB");
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-
 
 }

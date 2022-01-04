@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,7 +30,7 @@ public class UserControllerTests {
     private UserRepository userRepository;
 
     @Test
-    @WithMockUser(username = "admin", password = "admin", roles = {"ADMIN"})
+    @WithUserDetails("admin")
     void getAllUsers() throws Exception {
         String URL = "/api/admin/users";
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
@@ -40,7 +39,7 @@ public class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "admin", password = "admin", roles = {"ADMIN"})
+    @WithUserDetails("admin")
     void getUserById() throws Exception {
         String URLWithID = "/api/admin/users/1";
         mockMvc.perform(MockMvcRequestBuilders.get(URLWithID))
