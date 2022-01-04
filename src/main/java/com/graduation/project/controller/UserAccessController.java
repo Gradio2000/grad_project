@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -118,7 +120,8 @@ public class UserAccessController {
 
         logger.info(authUser.getUser().getName() + " enter into getAllVotes");
 
-        List<VoteTO> voteTOList = voteRepository.findAllByUserId(authUser.getUser().getUserId()).stream()
+        Page<Vote> votePage = voteRepository.findAllByUserId(PageRequest.of(page, size), authUser.getUser().getUserId());
+        List<VoteTO> voteTOList = votePage.stream()
                 .map(vote -> new VoteTO(vote.getRestId(), vote.getLocalDate(), vote.getLocalTime()))
                 .collect(Collectors.toList());
 
