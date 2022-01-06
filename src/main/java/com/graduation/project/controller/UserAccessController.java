@@ -4,6 +4,7 @@ import com.graduation.project.model.User;
 import com.graduation.project.model.Vote;
 import com.graduation.project.model.to.UserToWithoutPassword;
 import com.graduation.project.model.to.VoteTO;
+import com.graduation.project.repository.RestaurantRepository;
 import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoteRepository;
 import com.graduation.project.service.VoteService;
@@ -25,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -44,11 +46,14 @@ public class UserAccessController {
     private final UserRepository userRepository;
     private final VoteService voteService;
     private final VoteRepository voteRepository;
+    private final RestaurantRepository restaurantRepository;
 
-    public UserAccessController(UserRepository userRepository, VoteService voteService, VoteRepository voteRepository) {
+    public UserAccessController(UserRepository userRepository, VoteService voteService,
+                                VoteRepository voteRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
         this.voteService = voteService;
         this.voteRepository = voteRepository;
+        this.restaurantRepository = restaurantRepository;
     }
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -61,7 +66,7 @@ public class UserAccessController {
 
 
     @PutMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EntityModel<User>> changeUser(@RequestBody UserToWithoutPassword userTO,
+    public ResponseEntity<EntityModel<User>> editUser(@Valid @RequestBody UserToWithoutPassword userTO,
                                                         @AuthenticationPrincipal AuthUser authUser){
         logger.info(authUser.getUser().getName() + " enter into changeUser");
 
@@ -91,6 +96,10 @@ public class UserAccessController {
                                            @AuthenticationPrincipal AuthUser authUser) throws VoteException {
 
         logger.info(authUser.getUser().getName() + " enter into changeVote");
+
+        if (!restaurantRepository.existsById(vote.getRestId())){
+            throw new NullPointerException();
+        }
 
         Vote voteFromDB = voteRepository.getByUserIdAndDate(authUser.getUser().getUserId(), LocalDate.now());
 
