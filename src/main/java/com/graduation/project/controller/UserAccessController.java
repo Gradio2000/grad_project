@@ -11,6 +11,7 @@ import com.graduation.project.service.VoteService;
 import com.graduation.project.util.AuthUser;
 import com.graduation.project.util.VoteException;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -59,7 +60,7 @@ public class UserAccessController {
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
             new RepresentationModelAssemblerSupport<>(UserAccessController.class, (Class<EntityModel<User>>) (Class<?>) EntityModel.class) {
                 @Override
-                public EntityModel<User> toModel(User user) {
+                public @NotNull EntityModel<User> toModel(@NotNull User user) {
                     return EntityModel.of(user, linkTo(UserAccessController.class).slash(user.getUserId()).withSelfRel());
                 }
             };
@@ -68,7 +69,7 @@ public class UserAccessController {
     @PutMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<User>> editUser(@Valid @RequestBody UserToWithoutPassword userTO,
                                                         @AuthenticationPrincipal AuthUser authUser){
-        logger.info(authUser.getUser().getName() + " enter into changeUser");
+        logger.info(authUser.getUser().getName() + " enter into editUser");
 
         User oldUser = authUser.getUser();
         if (userTO.getEmail() != null){
