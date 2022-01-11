@@ -7,16 +7,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "voit",
+@Table(name = "vote",
         indexes = {@Index(name = "idx_vote_user_id", columnList = "user_id")},
         uniqueConstraints = { @UniqueConstraint(columnNames = { "date", "user_id" })}
         )
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "voit_id")
+    @Column(name = "vote_id")
     @JsonIgnore
-    private int voitId;
+    private int voteId;
 
     @JsonIgnore
     @Column(name = "user_id")
@@ -42,12 +42,12 @@ public class Vote {
     public Vote() {
     }
 
-    public int getVoitId() {
-        return voitId;
+    public int getVoteId() {
+        return voteId;
     }
 
-    public void setVoitId(int voit_id) {
-        this.voitId = voit_id;
+    public void setVoteId(int vote_id) {
+        this.voteId = vote_id;
     }
 
     public int getUserId() {

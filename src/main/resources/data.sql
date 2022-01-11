@@ -61,5 +61,5 @@ values (3, now(), 'Шашлык', '15.90', 1 );
 -- insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-21 15:34:35.662860', 1, 2 );
 -- insert into VOIT(date_time, rest_id, user_id) VALUES ( '2021-12-20 15:34:35.662860', 1, 1 );
 
-insert into VOIT(date, time, rest_id, user_id) VALUES ( '2021-12-23', '15:34:35.662860', 1, 2 );
-insert into VOIT(date, time, rest_id, user_id) VALUES ( '2021-12-30', '10:34:35.662860', 1, 2 );
+insert into VOTE(date, time, rest_id, user_id) VALUES ( '2021-12-23', '15:34:35.662860', 1, 2 );
+insert into VOTE(date, time, rest_id, user_id) VALUES ( '2021-12-30', '10:34:35.662860', 1, 2 );

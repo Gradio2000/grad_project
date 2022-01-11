@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
-@RequestMapping("/api/admin/restaurants")
 @Tag(name = "Restaurant controller", description = "CRUD restaurants")
 public class RestaurantController {
     final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
@@ -67,7 +66,8 @@ public class RestaurantController {
                 }
             };
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+
+    @PostMapping(value = "/api/admin/restaurants", consumes = MediaType.APPLICATION_JSON_VALUE)
     @CacheEvict("rest")
     public ResponseEntity<EntityModel<Restaurant>> addRest(@RequestBody Restaurant restaurant,
                                                            @AuthenticationPrincipal AuthUser authUser){
@@ -78,7 +78,8 @@ public class RestaurantController {
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @GetMapping(value = "/api/user/restaurants/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<Restaurant>> getRestById(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
         logger.info(authUser.getUser().getName() + " enter into getRestById");
 
@@ -86,7 +87,8 @@ public class RestaurantController {
         return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}/dishList", produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @GetMapping(value = "/api/user/restaurants/{id}/dishList", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Dish>>> getAllDishByRestId(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
         logger.info(authUser.getUser().getName() + " enter into getAllDishByRestId");
 
@@ -102,7 +104,8 @@ public class RestaurantController {
         return new ResponseEntity<>(CollectionModel.of(entityModels, restaurants), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/{id}/dishList", consumes = MediaType.APPLICATION_JSON_VALUE)
+
+    @PostMapping(value = "/api/admin/restaurants/{id}/dishList", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CollectionModel<EntityModel<Dish>>> addDishListByRestId(@PathVariable Integer id,
                                                                                   @RequestBody List<Dish> dishList,
                                                                                   @AuthenticationPrincipal AuthUser authUser){
@@ -127,8 +130,7 @@ public class RestaurantController {
     }
 
 
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/api/user/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
     @Cacheable("rest")
     public ResponseEntity<PagedModel<EntityModel<Restaurant>>> getAllRest(@AuthenticationPrincipal AuthUser authUser,
                                                         @RequestParam (defaultValue = "0") Integer page,
@@ -143,7 +145,8 @@ public class RestaurantController {
         return new ResponseEntity<>(pagedModel, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @DeleteMapping(value = "/api/admin/restaurants/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @CacheEvict("rest")
     public HttpStatus deleteRest(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
 
@@ -153,7 +156,8 @@ public class RestaurantController {
         return HttpStatus.OK;
     }
 
-    @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @PatchMapping(value = "/api/admin/restaurants/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @CacheEvict("rest")
     public ResponseEntity<EntityModel<Restaurant>> patchRestById(@PathVariable Integer id,
                                                                  @RequestBody Restaurant newRestaurant,
