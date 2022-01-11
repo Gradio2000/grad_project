@@ -24,7 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithUserDetails("admin")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class RestaurantControllerTests {
-	private final String URL = "/api/admin/restaurants";
+	private final String URLAdmin = "/api/admin/restaurants";
+	private final String URLUser = "/api/user/restaurants";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -34,15 +35,14 @@ class RestaurantControllerTests {
 
 	@Test
 	void getAllRest() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get(URL))
+		mockMvc.perform(MockMvcRequestBuilders.get(URLUser))
 				.andExpect(status().isOk())
 				.andDo(MockMvcResultHandlers.print());
 	}
 
 	@Test
 	void getRestById() throws Exception {
-		String URLWithID = "/api/admin/restaurants/1";
-		mockMvc.perform(MockMvcRequestBuilders.get(URLWithID))
+		mockMvc.perform(MockMvcRequestBuilders.get(URLUser + "/1"))
 				.andExpect(status().isOk())
 				.andDo(MockMvcResultHandlers.print());
 	}
@@ -51,7 +51,7 @@ class RestaurantControllerTests {
 	void addRest() throws Exception {
 		Restaurant restaurant = new Restaurant("newRestaurant");
 		String restMapper = JsonUtil.writeValue(restaurant);
-		mockMvc.perform(MockMvcRequestBuilders.post(URL)
+		mockMvc.perform(MockMvcRequestBuilders.post(URLAdmin)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(restMapper))
 				.andExpect(status().isCreated());
@@ -68,7 +68,7 @@ class RestaurantControllerTests {
 		Restaurant restaurant1 = restaurantRepository.findByName(restaurant.getName());
 		int id = restaurant1.getRestId();
 
-		mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/" + id))
+		mockMvc.perform(MockMvcRequestBuilders.delete(URLAdmin + "/" + id))
 				.andExpect(status().isOk());
 
 		restaurant1 = restaurantRepository.getById(restaurant1.getRestId());
@@ -82,7 +82,7 @@ class RestaurantControllerTests {
 		restaurant.setName("newRestaurant");
 		String restMapper = JsonUtil.writeValue(restaurant);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch(URL + "/" + id)
+		mockMvc.perform(MockMvcRequestBuilders.patch(URLAdmin + "/" + id)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(restMapper))
 				.andExpect(status().isOk());
