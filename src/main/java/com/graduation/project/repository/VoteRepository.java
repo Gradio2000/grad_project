@@ -18,7 +18,7 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     List<Vote> findAllByUserId(int userId);
 
 
-    @Query(nativeQuery = true, value = "SELECT * FROM VOIT WHERE USER_ID = :id and DATE = :date")
+    @Query(nativeQuery = true, value = "SELECT * FROM VOTE WHERE USER_ID = :id and DATE = :date")
     Vote getByUserIdAndDate(Integer id, LocalDate date);
 
 }

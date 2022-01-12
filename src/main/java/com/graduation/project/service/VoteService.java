@@ -3,8 +3,7 @@ package com.graduation.project.service;
 import com.graduation.project.model.Vote;
 import com.graduation.project.repository.RestaurantRepository;
 import com.graduation.project.repository.VoteRepository;
-import com.graduation.project.util.AuthUser;
-import com.graduation.project.util.VoteException;
+import com.graduation.project.util.IllegalRequestDataException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ public class VoteService {
 
     //insert vote into db
     @CacheEvict("voits")
-    public ResponseEntity<Vote> addVote(Vote vote, AuthUser authUser) throws VoteException {
+    public ResponseEntity<Vote> addVote(Vote vote)  {
         // check exist restaurant in DB
         if (!restaurantRepository.existsById(vote.getRestId())){
             throw new EmptyResultDataAccessException("My message", 100);
@@ -39,8 +38,7 @@ public class VoteService {
             vote.setLocalTime(LocalTime.now());
             return new ResponseEntity<>(voteRepository.save(vote), HttpStatus.OK);
         }
-        else throw new VoteException();
-
+        else throw new IllegalRequestDataException("Vote is already exist! Come tomorrow!");
     }
 }
 

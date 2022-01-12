@@ -9,7 +9,7 @@ import com.graduation.project.repository.UserRepository;
 import com.graduation.project.repository.VoteRepository;
 import com.graduation.project.service.VoteService;
 import com.graduation.project.util.AuthUser;
-import com.graduation.project.util.VoteException;
+import com.graduation.project.util.IllegalRequestDataException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -30,9 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -94,7 +92,7 @@ public class UserAccessController {
     @CacheEvict("voits")
     @PutMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> changeVote(@RequestBody Vote vote,
-                                           @AuthenticationPrincipal AuthUser authUser) throws VoteException {
+                                           @AuthenticationPrincipal AuthUser authUser) {
 
         logger.info(authUser.getUser().getName() + " enter into changeVote");
 
@@ -106,7 +104,7 @@ public class UserAccessController {
 
         if (voteFromDB != null){
             voteFromDB.setRestId(vote.getRestId());
-            return voteService.addVote(voteFromDB, authUser);
+            return voteService.addVote(voteFromDB);
         }
         else {
             vote.setUserId(authUser.getUser().getUserId());
@@ -115,7 +113,7 @@ public class UserAccessController {
             try {
                 return new ResponseEntity<>(voteRepository.save(vote), HttpStatus.OK);
             } catch (Exception e) {
-                throw new VoteException();
+                throw new IllegalRequestDataException("Vote is already exist! Come tomorrow!");
             }
         }
 
@@ -138,12 +136,5 @@ public class UserAccessController {
         return CollectionModel.of(voteTOList);
     }
 
-
-    @ExceptionHandler(VoteException.class)
-    public ResponseEntity<Map<String, String>> votingException(VoteException e) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("message", e.getMessage());
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
 
 }
