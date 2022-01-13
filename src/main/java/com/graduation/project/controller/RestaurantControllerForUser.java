@@ -4,6 +4,7 @@ import com.graduation.project.model.Dish;
 import com.graduation.project.model.Restaurant;
 import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.RestaurantRepository;
+import com.graduation.project.util.AssemblerSupport;
 import com.graduation.project.util.AuthUser;
 import com.graduation.project.util.Util;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +18,6 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,24 +47,7 @@ public class RestaurantControllerForUser {
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
-    private static final RepresentationModelAssemblerSupport<Restaurant, EntityModel<Restaurant>> ASSEMBLER_RESTAURANT =
-            new RepresentationModelAssemblerSupport<>(RestaurantControllerForUser.class, (Class<EntityModel<Restaurant>>) (Class<?>) EntityModel.class) {
-                @Override
-                public EntityModel<Restaurant> toModel(Restaurant restaurant) {
-                    Link restaurantLink = linkTo(RestaurantControllerForUser.class).slash(restaurant.getRestId()).withRel("restaurant");
-                    Link dishLink = linkTo(RestaurantControllerForUser.class).slash(restaurant.getRestId()).slash("dishList").withRel("dishList");
-                    return EntityModel.of(restaurant, restaurantLink, dishLink);
-                }
-            };
 
-    private static final RepresentationModelAssemblerSupport<Dish, EntityModel<Dish>> ASSEMBLER_DISH =
-            new RepresentationModelAssemblerSupport<>(DishRepository.class, (Class<EntityModel<Dish>>) (Class<?>) EntityModel.class) {
-                @Override
-                public EntityModel<Dish> toModel(Dish dish) {
-                    Link restaurantLink = linkTo(RestaurantControllerForUser.class).slash(dish.getRestId()).withRel("restaurant");
-                    return EntityModel.of(dish, restaurantLink);
-                }
-            };
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EntityModel<Restaurant>> getRestById(@PathVariable Integer id, @AuthenticationPrincipal AuthUser authUser){
@@ -74,7 +57,7 @@ public class RestaurantControllerForUser {
         Util.checkRestaurantExist(id);
 
         Restaurant restaurant = restaurantRepository.getById(id);
-        return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.OK);
+        return new ResponseEntity<>(AssemblerSupport.ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/dishList", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +68,7 @@ public class RestaurantControllerForUser {
         Util.checkRestaurantExist(id);
 
         List<EntityModel<Dish>> entityModels = dishRepository.findAllByRestId(id).stream()
-                .map(ASSEMBLER_DISH::toModel)
+                .map(AssemblerSupport.ASSEMBLER_DISH::toModel)
                 .collect(Collectors.toList());
 
         Link restaurants = linkTo(RestaurantControllerForUser.class).withSelfRel();
@@ -102,7 +85,7 @@ public class RestaurantControllerForUser {
 
         Page<Restaurant> restaurantPage = restaurantRepository.findAll(PageRequest.of(page, size));
         PagedModel<EntityModel<Restaurant>> pagedModel =
-                pagedResourcesAssembler.toModel(restaurantPage, ASSEMBLER_RESTAURANT);
+                pagedResourcesAssembler.toModel(restaurantPage, AssemblerSupport.ASSEMBLER_RESTAURANT);
 
         return new ResponseEntity<>(pagedModel, HttpStatus.OK);
     }

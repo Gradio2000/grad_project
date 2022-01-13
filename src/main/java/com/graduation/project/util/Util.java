@@ -17,4 +17,7 @@ public class Util {
             throw new IllegalRequestDataException("Restaurant is not found on DB");
         }
     }
+
+
+
 }

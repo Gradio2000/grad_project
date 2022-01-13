@@ -4,17 +4,15 @@ import com.graduation.project.model.Dish;
 import com.graduation.project.model.Restaurant;
 import com.graduation.project.repository.DishRepository;
 import com.graduation.project.repository.RestaurantRepository;
+import com.graduation.project.util.AssemblerSupport;
 import com.graduation.project.util.AuthUser;
 import com.graduation.project.util.Util;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 @RestController
 @RequestMapping("/api/admin/restaurants")
 @Tag(name = "Restaurant controller for admin access", description = "CRUD restaurants")
@@ -35,33 +31,11 @@ public class RestaurantControllerForAdmin {
 
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
-    private final PagedResourcesAssembler<Restaurant> pagedResourcesAssembler;
 
-    public RestaurantControllerForAdmin(RestaurantRepository restaurantRepository, DishRepository dishRepository,
-                                        PagedResourcesAssembler<Restaurant> pagedResourcesAssembler) {
+    public RestaurantControllerForAdmin(RestaurantRepository restaurantRepository, DishRepository dishRepository) {
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
-        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
-
-    private static final RepresentationModelAssemblerSupport<Restaurant, EntityModel<Restaurant>> ASSEMBLER_RESTAURANT =
-            new RepresentationModelAssemblerSupport<>(RestaurantControllerForUser.class, (Class<EntityModel<Restaurant>>) (Class<?>) EntityModel.class) {
-                @Override
-                public EntityModel<Restaurant> toModel(Restaurant restaurant) {
-                    Link restaurantLink = linkTo(RestaurantControllerForUser.class).slash(restaurant.getRestId()).withRel("restaurant");
-                    Link dishLink = linkTo(RestaurantControllerForUser.class).slash(restaurant.getRestId()).slash("dishList").withRel("dishList");
-                    return EntityModel.of(restaurant, restaurantLink, dishLink);
-                }
-            };
-
-    private static final RepresentationModelAssemblerSupport<Dish, EntityModel<Dish>> ASSEMBLER_DISH =
-            new RepresentationModelAssemblerSupport<>(DishRepository.class, (Class<EntityModel<Dish>>) (Class<?>) EntityModel.class) {
-                @Override
-                public EntityModel<Dish> toModel(Dish dish) {
-                    Link restaurantLink = linkTo(RestaurantControllerForUser.class).slash(dish.getRestId()).withRel("restaurant");
-                    return EntityModel.of(dish, restaurantLink);
-                }
-            };
 
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -71,7 +45,7 @@ public class RestaurantControllerForAdmin {
         logger.info(authUser.getUser().getName() + " enter into addRest");
 
         restaurantRepository.save(restaurant);
-        return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.CREATED);
+        return new ResponseEntity<>(AssemblerSupport.ASSEMBLER_RESTAURANT.toModel(restaurant), HttpStatus.CREATED);
     }
 
 
@@ -90,7 +64,7 @@ public class RestaurantControllerForAdmin {
         });
 
         List<EntityModel<Dish>> entityModels = dishRepository.saveAll(dishList).stream()
-                .map(ASSEMBLER_DISH::toModel)
+                .map(AssemblerSupport.ASSEMBLER_DISH::toModel)
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(CollectionModel.of(entityModels), HttpStatus.OK);
@@ -123,7 +97,7 @@ public class RestaurantControllerForAdmin {
         Restaurant oldRestaurant = restaurantRepository.getById(id);
         oldRestaurant.setName(newRestaurant.getName());
         restaurantRepository.save(oldRestaurant);
-        return new ResponseEntity<>(ASSEMBLER_RESTAURANT.toModel(oldRestaurant), HttpStatus.OK);
+        return new ResponseEntity<>(AssemblerSupport.ASSEMBLER_RESTAURANT.toModel(oldRestaurant), HttpStatus.OK);
     }
 
 }
