@@ -14,11 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -62,14 +63,6 @@ public class AdminAccessController {
         logger.info(authUser.getUser().getName() + " enter into getUserById");
 
         return new ResponseEntity<>(ASSEMBLER_USER.toModel(userRepository.getById(id)), HttpStatus.OK);
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<Map<String, String>> restaurantPatchingException() {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("error", "User is not found on DB");
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
 }

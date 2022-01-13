@@ -89,7 +89,7 @@ public class UserAccessController {
     }
 
 
-    @CacheEvict("voits")
+    @CacheEvict(value = "voits", allEntries = true)
     @PutMapping(value = "/voits", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> changeVote(@RequestBody Vote vote,
                                            @AuthenticationPrincipal AuthUser authUser) {
@@ -97,7 +97,7 @@ public class UserAccessController {
         logger.info(authUser.getUser().getName() + " enter into changeVote");
 
         if (!restaurantRepository.existsById(vote.getRestId())){
-            throw new NullPointerException();
+            throw new IllegalRequestDataException("Restaurant is not found on DB");
         }
 
         Vote voteFromDB = voteRepository.getByUserIdAndDate(authUser.getUser().getUserId(), LocalDate.now());

@@ -4,8 +4,6 @@ import com.graduation.project.model.Vote;
 import com.graduation.project.repository.RestaurantRepository;
 import com.graduation.project.repository.VoteRepository;
 import com.graduation.project.util.IllegalRequestDataException;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,11 +22,10 @@ public class VoteService {
     }
 
     //insert vote into db
-    @CacheEvict("voits")
     public ResponseEntity<Vote> addVote(Vote vote)  {
         // check exist restaurant in DB
         if (!restaurantRepository.existsById(vote.getRestId())){
-            throw new EmptyResultDataAccessException("My message", 100);
+            throw new IllegalRequestDataException("Restaurant is not found on DB");
         }
 
 

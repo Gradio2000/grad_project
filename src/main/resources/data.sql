@@ -1,3 +1,7 @@
+alter table VOTE
+    add constraint VOTE_USERS_USER_ID_FK
+        foreign key (USER_ID) references USERS;
+
 
 -- create table USERS (USER_ID integer, EMAIL varchar, NAME varchar, PASSWORD varchar);
 insert into USERS (USER_ID, EMAIL, NAME, PASSWORD)
