@@ -19,8 +19,7 @@ and run from your folder:
 ```sh
 java -jar voit.jar
 ```
-and you can use API
------------------------------------------------------
+and you can use
 [REST API documentation](http://localhost:8080/swagger-ui.html)  
 
 -----------------------------------------------------
