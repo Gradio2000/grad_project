@@ -12,6 +12,10 @@
 #### Stack: 
 JDK 15, Spring Boot 2.5, H2, Caffeine Cache, Swagger/OpenAPI 3.0
 
+-------------------------------------------------------------
+#### Deploy
+Download [voit.jar]()
+
 -----------------------------------------------------
 [REST API documentation](http://localhost:8080/swagger-ui.html)  
 
