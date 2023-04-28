@@ -13,8 +13,11 @@
 JDK 15, Spring Boot 2.5, H2, Caffeine Cache, Swagger/OpenAPI 3.0
 
 -------------------------------------------------------------
-#### Deploy
-Download [voit.jar]()
+#### Deploy:
+Download [voit.jar](https://github.com/Gradio2000/grad_project/blob/master/voit.jar)
+and run:
+```sh
+```
 
 -----------------------------------------------------
 [REST API documentation](http://localhost:8080/swagger-ui.html)  
